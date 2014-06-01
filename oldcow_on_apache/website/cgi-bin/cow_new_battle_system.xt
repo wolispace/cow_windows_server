@@ -1,0 +1,294 @@
+##tickloc:runsub ticked;
+
+##ticked:
+$s1 = $actor's slot1;
+$s2 = $actor's slot2;
+$end = "there is no attacker";
+if $s1 > 0 then check1loc else endme;
+
+##check1loc:
+$s1loc = $s1's loc;
+$end = "[$s1] has left.";
+if $s1loc eq $loc then check2loc else endme;
+
+##check2loc:
+$s2loc = $s2's loc;
+$end = "[$s2] has left.";
+if $s2loc eq $loc then dowhat else endme;
+
+##dowhat:
+$temp = $actor's slot3;
+case $temp do doinit1,doinit2,doat;
+
+##doinit1:
+clear $s1,all;
+
+multiset $s1 to "host='$s2',hosthow='',pose='fighting'";
+
+say 'msg',"[$s1] charges towards [$s2]!";
+set $actor's slot3 to 1;
+relook $loc;
+if $s2's class = 'player' then continue else doinit2;
+
+##doinit2:
+getgender $s2;
+say 'msg',"[$s2] narrows $hisher eyes at [$s1], preparing for battle.";
+set $actor's slot3 to 2;
+if $s2's class = 'player' then continue else doat;
+
+##doat:
+multivar $fromhit=$s1,$tohit=$s2;
+runsub doround;
+set $actor's slot3 to 3;
+runsub doat2;
+
+##doat2:
+multivar $fromhit=$s2,$tohit=$s1;
+runsub doround;
+set $actor's slot3 to 2;
+
+##doround:
+$hlth = $fromhit's health;
+if $hlth > 0 then prephit else isdead;
+
+##prephit:
+$spell = $fromhit's nextspell;
+if $spell > 0 then dospell else dobop;
+
+##isdead:
+update $fromhit = "pose='dead',host='',hosthow=''";
+$verb = (beaten,bested,conquered,defeated,triumphed,vanquished,whipped,annihilated,butchered,crushed,eradicated,exterminated,extinguished,gutted,killed,laid to waste,liquidated,nuked,quashed,slain,smashed,snuffed out,trashed,wasted,wiped out,wrecked);
+$verb2 = (has kicked the bucket,has bought the farm,has passed away,has croaked,is deceased,is dead,has kicked off,has perished,is snuffed,has succumbed);
+$verb3 = (has been $verb,$verb2);
+$end = "[$fromhit] $verb3.";
+if $fromhit's class eq 'player' then tothemorgue;
+goto endme;
+
+##tothemorgue:
+multivar $morgue='52618',$corpse=52819;
+
+$fname = $fromhit's name;
+$worth = $fromhit's worth;
+divide $worth by 2;
+copy $corpse;
+// set $fromhit's worth to $worth;
+multiset $new_id to "health=0,name='$fname',pose='dead',pwd='',loc='$loc',worth=0";
+
+getgender $fromhit;
+print "[$fromhit]'s spirit rises from $hisher body";
+relocate $fromhit to $morgue print "[$fromhit]'s spirit moves swiftly to another place, leaving behind a corpse." then "The spirit of [$fromhit] arrives.";
+sayto $fromhit,"You are dead.";
+
+##dospell:
+if $fromhit's mana < $spell's mana then toolow else docast2;
+set $fromhit's nextspell to '';
+
+##toolow:
+say 'msg',"[$fromhit] doesn't have enough mana to cast [$spell].";
+
+##docast2:
+$spellat = $fromhit's nextspellat;
+$verb = (speaking,articulating,delivering,expressing,mumbling,murmuring,muttering,mumbling,sounding,uttering,voicing);
+$secret = (arcane,esoteric,mysterious,mystic,recondite,apocryphal,enigmatic,mystical,mystifying,strange,veiled,intricate,orphic);
+say 'msg',"[$fromhit] begins $verb $secret words...";
+$mm = $fromhit's mana;
+$cost = $spell's mana;
+take $cost from $mm;
+set $fromhit's mana to $mm;
+copy $spell;
+multiset $new_id to "slot1='$fromhit',slot2='$spellat',slot3=0,loc='$loc',switch=1";
+relook $loc;
+
+##dobop:
+runsub checkwield;
+
+multivar $skiller=$fromhit,$skillname='aim',$skillcap=10,$skilltipobj=58711;
+runsub getskillvalue;
+$top = $skillvalue;
+if $top > 0 then continue else initskill;
+add $skillmod to $top;
+
+multivar $skiller=$tohit,$skillname='dodge',$skillcap=10,$skilltipobj=58712;
+runsub getskillvalue;
+$dodge = $skillvalue;
+if $dodge > 0 then continue else initskill;
+add $skillmod to $dodge;
+
+add $dodge to $top;
+$ishit = random $top;
+if $ishit > $dodge then damage else missed;
+
+##checkwield:
+$weapon is wielded by $fromhit;
+if $weapon ne "" then continue else defweap;
+$damage = $weapon's health;
+divide $damage by 10;
+
+##defweap:
+$weapon = 47693;
+
+##damage:
+$toh = $tohit's health;
+$tohm = $tohit's healthmax;
+take $damage from $toh;
+if $toh < 0 then zeroit;
+set $tohit's health to $toh;
+percentbar $toh of $tohm;
+getgender $fromhit;
+$wclass = $weapon's class;
+multivar $a=$actor,$t=$target,$s=$second,$actor=$fromhit,$target=$tohit,$second=$weapon;
+say 'hit',"[$fromhit] hits [$tohit] with $hisher $wclass! ($percentbar)";
+multivar $actor=$a,$target=$t,$second=$s;
+
+$ishit = random 6;
+if $ishit > 2 then special;
+
+multivar $skiller=$tohit,$skillname='dodge';
+runsub incrskill;
+
+##zeroit:
+$toh = 0;
+set $actor's host to $fromhit; //winner
+
+##special:
+find $weapon,random;
+if $found_id ne "" then dospecial;
+
+if $fromhit's class eq 'player' then hurtweapon;
+
+##hurtweapon:
+if $weapon's health > 5 then hurtweapon2;
+
+##hurtweapon2:
+$wh = $weapon's health;
+$whm = $weapon's healthmax;
+take .2 from $wh;
+set $weapon's health to $wh;
+percentbar $wh of $whm;
+$healthbar = $percentbar;
+sayto $fromhit,"Your weapon is damaged a bit by that hit ($percentbar).";
+
+##dospecial:
+multiset $found_id to "slot1='$fromhit',slot2='$tohit',slot3='$weapon',switch=1,loc='$loc',pose=''";
+relook $loc;
+
+##missed:
+$v2 = (sidesteps,dodges,avoids,parries,evades,skirts,deflects,diverts,ducks from);
+$hitword = (hit,blow,attack,strike,swing,swipe);
+$form = ([$fromhit] misses [$tohit],[$tohit] $v2 the $hitword from [$fromhit]);
+say 'msg',"$form.";
+
+multivar $skiller=$fromhit,$skillname='aim';
+runsub incrskill;
+
+##endme:
+say 'msg',"The battle ends as $end";
+if $actor's host > 0 then winner;
+multiset $actor to "code='',pwd='',loc=0";
+multiset $s1 = "host='',hosthow=''";
+clear $actor,all;
+if $s1's health > 0 then clearpose;
+relook $loc;
+switch $actor off;
+
+##clearpose:
+set $s1's pose to '';
+
+##winner:
+if $s1's class = 'player' then winner2;
+
+##winner2:
+if $s2's class = 'player' then winner3;
+
+##winner3:
+if $s1 = $actor's host then win12 else win21;
+
+##win12:
+multivar $t=$target,$s=$second,$target=$s1,$second=$s2;
+runsub saywin;
+
+##win21:
+multivar $t=$target,$s=$second,$target=$s2,$second=$s1;
+runsub saywin;
+multivar $target=$t,$second=$s;
+
+##saywin:
+$verb = (beat,bested,conquered,defeated,triumphed,vanquished,whipped,annihilated,butchered,crushed,eradicated,exterminated,extinguished,gutted,killed,laid waste to,liquidated,nuked,quashed,slain,smashed,snuffed out,trashed,wasted,wiped out,wrecked);
+msg 0,$actor,0,0,'battlewon',"A rumor spreads across the realm that [$target] has $verb [$second] in battle";
+
+//---------------------------------------------------------;
+// Skill library code below;
+
+##incrskill:
+$skillvals = 'x';
+$skillvals = $skiller's skillvals;
+manipulate $skillvals get $skillname to $valstring by 1;
+if $valstring == "" then incrskillerr else incrskill2;
+##incrskillerr:
+print "[$skiller] tried to increment a skill that doesn't exist";
+multivar $skillcap=10,$skilltipobj=63949;
+runsub initskill;
+##incrskill2:
+manipulate $valstring get svalue to $skillvalue by 2;
+manipulate $valstring get spoints to $skillpoints by 2;
+manipulate $valstring get scap to $skillcap by 2;
+manipulate $valstring get stipobj to $skilltipobj by 2;
+add 1 to $skillpoints;
+if $skillvalue > 0 then continue else gainskill;
+if $skillpoints > $skillvalue then checkcap;
+manipulate $valstring set svalue to $skillvalue by 2;
+manipulate $valstring set spoints to $skillpoints by 2;
+manipulate $valstring set scap to $skillcap by 2;
+manipulate $skillvals set $skillname to $valstring;
+set $skiller's skillvals to $skillvals;
+##checkcap:
+if $skillpoints > $skillcap then saytip else gainskill;
+$skillpoints = '0';
+##gainskill:
+$skillvalue = $skillpoints;
+$advancemsg = $skilltipobj's extra;
+say 'msg',"[$skiller] $advancemsg";
+sayto $skiller,"Your $skillname is now $skillvalue";
+##saytip:
+$capmsg = $skilltipobj's info;
+swap $capmsg so ',' is '`'; // commas wreak havoc;
+$capmsg = "$capmsg|zzzz";
+$topmsg = position of 'zzzz' in $capmsg;
+take 1 from $topmsg;
+$which = random $topmsg;
+add 1 to $which;
+$showwhich = value of position $which from $capmsg;
+swap $showwhich so '`' is ',';
+sayto $skiller,"$showwhich";
+
+##initskill:
+$skillvals = $skiller's skillvals;
+$skills = $skiller's skills;
+manipulate $skillvals get $skillname to $valstring;
+if $valstring ne "" then initskillerr else initskill2;
+##initskillerr:
+sayto $skiller,"[$skiller] tried to init skill $skillname which was already present.";
+##initskill2:
+$valstring = "svalue=1}2{smod=0}2{spoints=0}2{scap=$skillcap}2{stipobj=$skilltipobj";
+manipulate $skillvals set $skillname to $valstring by 1;
+swap $skills add $skillname;
+$advancemsg = $skilltipobj's extra;
+sayto $skiller,"[$skiller] $advancemsg";
+set $skiller's skills to $skills;
+set $skiller's skillvals to $skillvals;
+
+##getskillvalue:
+$skillvals = 'x';
+$skillvals = $skiller's skillvals;
+manipulate $skillvals get $skillname to $valstring;
+if $valstring == "" then getsv1 else getsv2;
+##getsv1:
+$skillvalue = 0;
+$skillmod = 0;
+##getsv2:
+manipulate $valstring get svalue to $skillvalue by 2;
+manipulate $valstring get smod to $skillmod by 2;
+if $skillvalue == "" then getsv1;
+##getsv1:
+$skillvalue = 0;
+$skillmod = 0;

@@ -1,0 +1,80 @@
+
+get $target,$rel,$text in $loc;
+if $target > 0 then checkpw else chkoneword;
+##chkoneword:
+var $text to '';
+get $target in $loc;
+if $target > 0 then checkpw else fail;
+##checkpw:
+if $pw like $target's pwd then chkdesc else itslocked;
+##chkdesc:
+if $text eq '' then editdesc else descit;
+
+##editdesc:
+var $caption to 'description';
+var $fld to 'extra';
+say 'edits',"[$actor] starts to describe [$target]";
+mode textbox;
+
+##descit:
+set $target's extra to $text;
+say 'edits',"[$actor] described [$target] as '$text'";
+msg $loc,$actor,0,0,'force',"force:look $loc";
+
+##fail:
+if $counter > 0 then end else listall;
+##listall:
+var $click_cmd to 'describe';
+var $desc_intro to "Click on the object you want to $click_cmd:
+<br>";
+look $loc,list;
+msg $loc,$actor,$actor,0,'force',"force:look $loc,list";
+
+##locked:
+say 'objlocked',"[$actor] could not describe [$target] because its locked";
+
+
+---
+
+
+get $target in $loc;
+if $target > 0 then checkpw else fail;
+##checkpw:
+if $pw like $target's pwd then editit else locked;
+##editit:
+var $caption to 'message';
+var $fld to 'extra';
+say 'edits',"[$actor] starts to describe [$target]";
+mode textbox;
+##fail:
+if $counter > 0 then end else listall;
+##listall:
+var $click_cmd to 'describe';
+var $desc_intro to "Click on the object you want to $click_cmd:
+<br>";
+look $loc,list;
+msg $loc,$actor,$actor,0,'force',"force:look $loc,list";
+
+##locked:
+say 'objlocked',"[$actor] could not describe [$target] because its locked";
+--
+get $target in $loc;
+if $target > 0 then checkpw else fail;
+##checkpw:
+if $pw like $target's pwd then editit else locked;
+##editit:
+var $caption to 'message';
+var $fld to 'extra';
+say 'edits',"[$actor] starts to describe [$target]";
+mode textbox;
+##fail:
+if $counter > 0 then end else listall;
+##listall:
+var $click_cmd to 'describe';
+var $desc_intro to "Click on the object you want to $click_cmd:
+<br>";
+look $loc,list;
+msg $loc,$actor,$actor,0,'force',"force:look $loc,list";
+
+##locked:
+say 'objlocked',"[$actor] could not describe [$target] because its locked";

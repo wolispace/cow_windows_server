@@ -1,0 +1,345 @@
+---cow2
+
+cow.prg      main prog
+cowp.prg     procedure file
+cow.dbf      object database
+cownext.dbf  cmd stack - any record in this will be processed by a server
+cowmsg.dbf   msg stack - any ne entries to this while a player is running will be displayed as a message
+
+
+
+---Basic concepts:
+
+Cow is an environment where objects are manipulated by players and other objects.
+
+Because COW was initially written for a dBase environment most of the documentation
+refers to records and fields which translate into objects and propereties.  Also
+pure dBase does not support functions only procedures which are like sub functions
+in that they do not return a value but can have multiple params passed to it.
+To provide the ability of returning values from procedures I have a global variable 
+called g_return which will be manipulated by each procedure and read from after
+returning from the procedure 
+	instead of saying   msgbox(SeekObjName('the hat'))
+	          you say   DO SEEKOBJNAME with 'the hat'
+			       then   DO MSGBOX with g_return
+
+A database of objects (records) with properties (fields) is indexed in a variety 
+of ways to quickly locate objects in relation to each other, by name or number.
+
+All of the low-level commands are written into the code, all high-level commands
+which will be used by players etc.. will be objects with names starting with /
+
+Most commands will consist of stringing together low-level commands (listed below)
+
+Every command consists of the Actor performing the command and a series of parameters if required.
+The parameters are usually the target object, a secondary object, a word or a string of words.
+e.g. /put the hat on the cat
+'/Put' is the command (its the name of an object which processes the params 'the hat on the cat'
+'the hat' is the target object (first object specified)
+'on' is a word (a relationship attribute) 
+'the cat' is the secondary object
+
+Servers and players
+By default COW starts as both a server and a player, that is it processes background tasks
+and messages to and from players.
+
+Iether one can be turned off at any time or COW can be started in iether mode.
+
+This will make the player COW faster as it is not being interupted to process background tasks.
+
+
+READ THE '*** VERY IMPORTANT THING...' FURTHER DOWN IN THIS TEXT!
+
+
+
+---main sequence of events:
+
+user imput grabbed with keypressed and stored in g_inputbuffer
+
+when a '.' is in g_inputbuffer then split text at '.' and do usercmd with first half
+
+usercmd append users default prefix if none specified (do/say)    x_cmdline
+
+usercmd is a human player function only so every thing the user does goes to parseline
+
+usercmd sets the current actor to the user  (f_actor>0 indicates a player)
+usercmd sets the current location to the users object (g_myloc)
+usercmd sets the current location for the action (f_actionloc)
+
+usercmd calls doobj with the x_cmdline
+
+doobj grabs first word as its probably a cmd, and stores it in f_cmd
+doobj also grabs the remaining text/params and stores in f_params
+  f_params is the params of the command.. 'the small hat' (/get the small hat)
+  f_cmd is the command name.. '/get'
+doobj tries to find a matching object..
+  if an object is found the doobj is performed with the &f_cmds of the object
+  and the current f_vars..
+
+  if no obj is found then an internal cmd/proc is to be performed..
+  if no internal cmd is found then reply with a msg 'cant do that'
+
+Each object's f_cmds will handle the params passed to it..
+
+
+ *** VERY IMPORTANT THING TO READ AND UNDERSTAND ***
+ 
+A THING is one of the following:
+	- an objects name including attributes 					e.g. the red hat
+	- an objects number													  209
+	- a mem var that resolves to an objects name or number	  %actor
+	- a literal string													  "hello world" <-- trailing quote not needed
+	- or a literal number												  #92 			 <-- trailing hash not needed iether
+
+	any referance to an object can also be followed by multiple field referances
+	using the delimiter ('s ) e.g. the red hat's qty 
+	or a more complex example which locates related objects:
+	the red hat's host's link's location's location
+
+	'a cat in a hat in a box '
+	 - finding the cat's location's location will return the box 
+
+	a thing can also contain maths with the use of :
+	the mathsDelimiter (:) 	and an operator (+-*/) 	and another thing
+
+	the hat's qty:*#3
+	"hello ":+"world"
+	%actor's weight:+%actror's weight:*%target's location's qty:+#2
+
+	maths is performed backwards with sequential preferance e.g. #2:*#3:+#4 = (3+4)*2
+
+	+ adds numbers and concat's strings
+	- subtracts numbers and removed the second string from the first "hello":-"ll" returns "heo"
+
+
+
+--- working functions:
+chkobj <objName> - trys to find obj and creates in f_actionloc if not there
+compare <<thing>;<operator><thing>{,<thing>...}> - compares thing1 with each thing in turn.  returns the thing number that first is true e.g. #1;=#2,#1 returns 2 cos the second thing is =
+debug <levelString|blankToPrompt>- sets the debug level
+descobj <detailLevel> - describes the current object to detail level
+doobj <cmdString><caller> - processes a string of /cmds. if caller=1 its a player with limitations..
+findobj <thing>{&<thing>..} - a thing is iether <objname|number{,scope}>{'s fields...}{:<operator><thing>...} or <"string"|#number#>{:<operator><thing>...}
+import <filename> - reads in a file and uses old linewiz to process
+init - open dbfs and indexes
+inorout <sourceString>,<inOrOutString>,<modein/modeout/modein+modeout>  - returns yes/no
+keypressed <stringBuffer> - adds keypresses to string buffer
+msgbox <Prompt> - returns users responce to the prompt as a string
+multichoice <returnChoice> asks user for a choice from choices[choicesize]
+newobj <location> - creates a new obj or recycles a blob into location
+openfile <filename><handle> - opens a file for reading/writing
+parsename <objName> - resolves string into an obj's name and attribs '3 blind mice' = 'mice' 3 'blind'
+piece <sourceString>,<pieceCount>,delim,result,remove - returns nothing
+random <number> returns a random number between 1 and number.
+readline <handle><line> - reads a line from the file..
+resolve <string> converts %vars into real values and works out scope !not complete!
+seekfields <'s fields...> finds the fields of the current record..
+seekobjname <string> finds an object by name and attribs..
+seekobjnum <number> finds an object by number..
+showdebug - displays debug info 0=off,1=noPause,2+=pause
+shutdown - saves users settings and closes dbfs
+stripqty <objName><returnQty> - strips a qty from a onb name string and retuns the value
+usercmd <usersCmdstring> proceeses a users string of /cmds
+userprompt - shows the user prompt based on defmode..
+/setnext - sets the next command on the cownext stack..
+getnext - performs the next command on the cownext stack..
+		
+
+--- yet to be completed functions:
+delobj (need to indicate wether all enclosed objs are deleted or moved to obj's loc)
+desctree (indicate if we stop at things INside or OUTside)
+descroot ?
+descloc
+descout
+adopt	?
+findreac
+getvars
+sendmsg
+getmsg
+parsemsg
+setquest
+
+--- functions I can brobably remove:
+objwiz - prompts user about new obj being created 
+parseplural - works out plural of current object
+adopt <sourcething><targetThing><whatToSwap> - old proc set fields
+getvars <readWriteMode><varType><fields> - old proc used by adopt
+
+
+
+--- the current list of internal low-level commands:  25/9/97
+/Setver //	<thing> to <thing> ( & <thing> to <thing> ...) delimited by & = and
+/if  
+/while
+/Newobj /@
+/Create
+/Delobj /!
+/Chkobj /&
+/Findobj
+/Withinobj /%
+/Sendmsg	 /?
+/Showall shows all objects in the workd and where they are
+/Desctree
+/Descroot
+/Debug shows and sets current debug level
+/server show and sets current server/player status
+/Compare 
+/browse
+/setnext />- sets the next command on the cownext stack..
+
+
+--- the internal functions used in cmd string:  (documented prior to definition of <thing>)
+*** <obj> = name or number
+
+/@ /newobj <obj num>  - creates a new object or recycles an old one into <location>
+                        it gives it values form defobj (no def obj so make one)
+                        return <objnum> or 0)
+
+/& /chkobj <obj> - find the named object (first one, anywhere), if it doesnt exist then
+                   make the object using newobj, use current f_actionloc for location
+                   returns <objnum> or 0
+
+/findobj <obj>{'s xyz}{' anywhere} - finds an object using the current g_scope settings
+                                        returns <objnum> or 0
+
+/> /sendmsg <obj>, <text> - sends msg to all in obj and obj itself..
+                            returns 0
+
+/! /delobj <obj> - deletes the object
+                   returns 0
+
+// /setvar <thing1> in <thing2> - loops through all params passed delim by ', '
+											  puts the val of thing1 into thing2
+                                   things can be an obj's field
+                                   a memory variable
+                                   or just an obj = obj's number
+
+/findobj <obj> - finds the object
+                 returns obj num or 0
+
+/browse - allows direct editing of the world.. <press enter to edit a field>
+
+/? - displays help information about a cmd (found in quests)
+
+--- planning ---
+
+----- Notes about describing locations: -----
+
+ everything is 'in' the current location by default. 
+ all 'on' words start with one space ' on' ' over' ' beside' etc..
+ all stuckOn words start with two spaces '  glued to' '  painted on'
+ all in words dont have a space 'inside' 'within'
+ this is so that sorting happens with outside objs first when listing what an obj hosts,
+  if the obj is open the continue displaying 'in' objs otherwise stop (desctree)
+
+
+ LOOK AT BELL = you see a gold bell, on a sleeping cat on some pillows
+                on a bed on a rug in a bedroom.  On the bell is a small note.
+					 <descroot> <desctree>
+
+ LOOK = You are in a boat, in a gail, on the ocean.
+ in the boat is a small cup and a yellow dog and a hatch.
+ You can smell the sea air.
+
+ LOOK = You are on a bed, on a rug, in a bedroom.
+ On the bed are some pillows with a sleeping cat on it.
+ On the cat is a gold bell.
+ Also on the bed is a quilt with a goldfish bowl on it.
+ In the goldfhish bowl are some goldfish.
+ 
+ <rel><host> is <obj> [with.. <obj> <rel> it] [and <obj> <rel> it]
+ 
+ Alternate: <verb><rel><host> is/are <obj>...
+            sleeping on the pillows is a cat..
+ maybe have a random choice: mostly first way, then sometimes alternate way
+ 
+ --- describing a tree ---
+ get mid description of obj <a big bed> <-- this includes a verb 'a sleeping black cat'
+ get short description		  <bed>
+ get 'her/him/it/them'
+ get sense 'see/hear/feel..'
+ get verb of what this obj is doing.. (in rel to host)
+ ? 'You can ' <sense> <mid desc>
+ 	 You can, see, a large bed,
+
+ While there are objects hosted by this then do:
+	get mid description of hosted obj <a black cat>
+	get short description		  <cat>
+	det verb                     <sleeping> 
+	get 'her/him/it/them'
+	get sense 'see/hear/feel..'
+	get reltohost 'on, in, under, with, beside'
+ 	? 'with '<mid desc of hosted obj> <hosted obj verb> <relltohost> <host obj's her/his/it/them>
+		with, a black cat, sleeping, on, it
+
+
+--- some thoughts, bits may be out of date now 3/1/98 ---
+
+***
+* ony have a few basic commands that are internal
+* /set <obj>'s<field> to <obj>'s<field>. - store first val in second
+* /! <location> <message>
+* /delobj <obj>
+* /creobj <obj>
+* /descobj <obj>
+* /copyobj <obj>
+* /adopt <obj>,<fields>,<secondobj>
+
+*** replacable params are like %actor %target = f_actor f_target
+* fields follow "'s "	 %actor's %host
+*** special replacable params
+* %rndlocal  - local random object number
+* %rndglobal - any random object number
+* %rnd10		 - random number between 0-10
+* %rnd100    - random number bwtween 0-100
+
+
+*** need ONE proc which takes a string like '/get the cat. /open the door'
+* breaks it down into /<cmd> <params>. and processes each one in turn..
+* these in turn will call the same proc..
+* this proc will handle if then and do whiles
+* the very first cmd performed can be iether player or computer, after that
+* all subsiquent cmds are computer.
+* at the point where user input and <Enter> occure, the f_actor is set to the players obj
+* this also handle the default action type for players..
+
+
+
+
+--- analysing ---
+
+cow.exe size:
+198k 3/4/97  
+212k Code size 17718, Symbols 5296, Constants 5034 && browse()
+212k Code size 17718, Symbols 5296, Constants 5034	&& dbedit()
+207k Code size 17829, Symbols 5296, Constants 5067	&& added /showall  17
+207k Code size 17833, Symbols 5296, Constants 5063 && swapped inorout with substr..
+207k Code size 17849, Symbols 5296, Constants 5063 && another swap..
+207k Code size 17842, Symbols 5296, Constants 5070  && reverted back to inorout..
+207k Code size 17873, Symbols 5296, Constants 5055 && less 0 findobjs in descobj..
+207k Code size 17967, Symbols 5296, Constants 5201 && added more debug info..
+207k Code size 17968, Symbols 5296, Constants 5200 && removed one space from a constant..
+207k Code size 18041, Symbols 5312, Constants 5191 && changed '.' to contant..
+207k Code size 18033, Symbols 5312, Constants 5311 && real field names not aa ab..
+207k Code size 17985, Symbols 5312, Constants 5311	&& changed /chkobj internal call..
+212k Code size 17985, Symbols 5312, Constants 5311 && changed dbedit() to browse()
+212k Code size 18057, Symbols 5312, Constants 5319 && find actor before performing cmd..
+212k Code size 18093, Symbols 5312, Constants 5331 && rename obj at start of paresname..
+	  Code size 18113, Symbols 5312, Constants 5327 && finding fields..
+	  Code size 17983, Symbols 5296, Constants 5297	&& fixing find fields with piece/inorouts
+	  Code size 18012, Symbols 5312, Constants 5156 && fixing fields.. added up arrow input buffer
+	  Code size 18069, Symbols 5328, Constants 5195 && adding type checking in fld finding..
+	  Code size 18216, Symbols 5344, Constants 5256 && setvar..
+214k Code size 18952, Symbols 5504, Constants 5720 && fixing set delim..
+     Code size 18949, Symbols 5520, Constants 5707 && replacing ' to ' with setdelim '='
+214k Code size 18926, Symbols 5600, Constants 5682 && gave piece remove ablilty..
+217k Code size 20864, Symbols 5584, Constants 6624 && restructured findobj and added compare..
+211k Code size 18496, Symbols 5584, Constants 3472 && same without 108 x DO SHOWDEBUG for a test..
+217k Code size 21382, Symbols 5296, Constants 6442 && user interface like DOS - no linewiz
+	  Code size 21489, Symbols 5296, Constants 6511 && added doobj descroot facility..
+218k Code size 21787, Symbols 5456, Constants 6661	&& trying to fix in/on facility and desctree
+     Code size 21868, Symbols 5472, Constants 6676 && added 'me,myself,my' facility
+220k Code size 23239, Symbols 5328, Constants 6905 && added setnext, getnext and started sendmsg,showmsg
+221k Code size 23973, Symbols 5440, Constants 7355 && sendmsg works, server/player and startup params
+222k Code size 24405, Symbols 5440, Constants 7643 && tidy up params, help, userprompt, /server
+224k Code size 25636, Symbols 5728, Constants 8012 && changed startup cmds, added %phrase for /say, added timed cmds..

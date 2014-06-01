@@ -1,0 +1,604 @@
+http://translate.google.com/translate_t?text=this%20is%20a%20test&langpair=en|fr
+
+langpairs are:
+
+
+
+<option value="en|de">English to German
+</option>
+<option value="en|es">English to Spanish
+</option>
+<option value="en|fr">English to French
+</option>
+<option value="en|it">English to Italian
+</option>
+<option value="en|pt">English to Portuguese
+</option>
+<option value="en|ar">English to Arabic BETA
+</option>
+<option value="en|ja">English to Japanese BETA
+</option>
+<option value="en|ko">English to Korean BETA
+</option>
+<option value="en|zh-CN">English to Chinese&nbsp;(Simplified) BETA
+</option>
+<option value="de|en" selected>German to English
+</option>
+<option value="de|fr">German to French
+</option>
+<option value="es|en">Spanish to English
+</option>
+<option value="fr|en">French to English
+</option>
+<option value="fr|de">French to German
+</option>
+<option value="it|en">Italian to English
+</option>
+<option value="pt|en">Portuguese to English
+</option>
+<option value="ar|en">Arabic to English BETA
+</option>
+<option value="ja|en">Japanese to English BETA
+</option>
+<option value="ko|en">Korean to English BETA
+</option>
+<option value="zh-CN|en">Chinese&nbsp;(Simplified) to English BETA
+</option>
+</select>
+<input type=hidden name=hl value="en">
+<input type=hidden name=ie value=UTF-8>
+<input type=hidden name=oe value=UTF-8>
+<input type=submit value="Translate">
+</form>
+<p>
+<b>&nbsp;&nbsp;or
+</b>
+<p>
+<form action="http://translate.google.com/translate">&nbsp;&nbsp;Translate a web page:
+<br>&nbsp;&nbsp;
+<input type=text name=u value="http://" size=55> 
+<br>&nbsp;&nbsp;from
+<select name=langpair>
+<option value="en|de">English to German
+</option>
+<option value="en|es">English to Spanish
+</option>
+<option value="en|fr">English to French
+</option>
+<option value="en|it">English to Italian
+</option>
+<option value="en|pt">English to Portuguese
+</option>
+<option value="en|ar">English to Arabic BETA
+</option>
+<option value="en|ja">English to Japanese BETA
+</option>
+<option value="en|ko">English to Korean BETA
+</option>
+<option value="en|zh-CN">English to Chinese&nbsp;(Simplified) BETA
+</option>
+<option value="de|en" selected>German to English
+</option>
+<option value="de|fr">German to French
+</option>
+<option value="es|en">Spanish to English
+</option>
+<option value="fr|en">French to English
+</option>
+<option value="fr|de">French to German
+</option>
+<option value="it|en">Italian to English
+</option>
+<option value="pt|en">Portuguese to English
+</option>
+<option value="ar|en">Arabic to English BETA
+</option>
+<option value="ja|en">Japanese to English BETA
+</option>
+<option value="ko|en">Korean to English BETA
+</option>
+<option value="zh-CN|en">Chinese&nbsp;(Simplified) to English BETA
+</option>
+</select>
+<input type=hidden name=hl value="en">
+<input type=hidden name=ie value=UTF-8>
+<input type=hidden name=oe value=UTF-8>
+<input type=hidden name=prev value=/language_tools>
+<input type=submit value="Translate">
+</font>
+</td>
+<td width=99%% align=left valign=top nowrap>
+<span style="margin-top:2ex;margin-right:1ex;padding:1ex;border:1px solid #7f9db9;float:left;text-align:center;">
+<font size=-1>Google Toolbar instantly translates words
+<br>on English web pages into other languages
+<br>
+<a href="http://toolbar.google.com" onmousedown="return rwt(this,'promos','hpplangpr:en_extra','pro','1','')">Download now
+</a>
+</font>
+</span>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</form>
+<p>
+<br>
+<table cellspacing=0 cellpadding=3 border=0 width=92%>
+<tr bgcolor=#ffffff>
+<td>&nbsp;
+<b>Use the Google Interface in Your Language
+</b>
+</td>
+</tr>
+<tr bgcolor=#cbdced>
+<td>
+<table width=100% cellpadding=3 cellspacing=0 border=0>
+<tr bgcolor=#ffffff>
+<td colspan=6>
+<font size=-1>
+<p>Set the Google homepage, messages, and buttons to display in your selected language via our 
+<a href="/preferences?hl=en">Preferences
+</a> page.
+<br>Google currently offers the following interface languages:
+</p>
+</font>
+</td>
+</tr>
+<tr bgcolor=#ffffff>
+<td valign=top nowrap width=1%>
+<font size=-1>
+<ul>
+<li>
+<a href="http://www.google.com/intl/af/">Afrikaans
+</a>
+<li>
+<a href="http://www.google.com/intl/sq/">Albanian
+</a>
+<li>
+<a href="http://www.google.com/intl/am/">Amharic
+</a>
+<li>
+<a href="http://www.google.com/intl/ar/">Arabic
+</a>
+<li>
+<a href="http://www.google.com/intl/hy/">Armenian
+</a>
+<li>
+<a href="http://www.google.com/intl/az/">Azerbaijani
+</a>
+<li>
+<a href="http://www.google.com/intl/eu/">Basque
+</a>
+<li>
+<a href="http://www.google.com/intl/be/">Belarusian
+</a>
+<li>
+<a href="http://www.google.com/intl/bn/">Bengali
+</a>
+<li>
+<a href="http://www.google.com/intl/bh/">Bihari
+</a>
+<li>
+<a href="http://www.google.com/intl/xx-bork/">Bork, bork, bork!
+</a>
+<li>
+<a href="http://www.google.com/intl/bs/">Bosnian
+</a>
+<li>
+<a href="http://www.google.com/intl/br/">Breton
+</a>
+<li>
+<a href="http://www.google.com/intl/bg/">Bulgarian
+</a>
+<li>
+<a href="http://www.google.com/intl/km/">Cambodian
+</a>
+<li>
+<a href="http://www.google.com/intl/ca/">Catalan
+</a>
+<li>
+<a href="http://www.google.com/intl/zh-CN/">Chinese&nbsp;(Simplified)
+</a>
+<li>
+<a href="http://www.google.com/intl/zh-TW/">Chinese&nbsp;(Traditional)
+</a>
+<li>
+<a href="http://www.google.com/intl/co/">Corsican
+</a>
+<li>
+<a href="http://www.google.com/intl/hr/">Croatian
+</a>
+<li>
+<a href="http://www.google.com/intl/cs/">Czech
+</a>
+<li>
+<a href="http://www.google.com/intl/da/">Danish
+</a>
+<li>
+<a href="http://www.google.com/intl/nl/">Dutch
+</a>
+<li>
+<a href="http://www.google.com/intl/xx-elmer/">Elmer Fudd
+</a>
+</ul>
+</font>
+</td>
+<td valign=top nowrap width=1%>
+<font size=-1>
+<ul>
+<li>
+<a href="http://www.google.com/intl/en/">English
+</a>
+<li>
+<a href="http://www.google.com/intl/eo/">Esperanto
+</a>
+<li>
+<a href="http://www.google.com/intl/et/">Estonian
+</a>
+<li>
+<a href="http://www.google.com/intl/fo/">Faroese
+</a>
+<li>
+<a href="http://www.google.com/intl/tl/">Filipino
+</a>
+<li>
+<a href="http://www.google.com/intl/fi/">Finnish
+</a>
+<li>
+<a href="http://www.google.com/intl/fr/">French
+</a>
+<li>
+<a href="http://www.google.com/intl/fy/">Frisian
+</a>
+<li>
+<a href="http://www.google.com/intl/gl/">Galician
+</a>
+<li>
+<a href="http://www.google.com/intl/ka/">Georgian
+</a>
+<li>
+<a href="http://www.google.com/intl/de/">German
+</a>
+<li>
+<a href="http://www.google.com/intl/el/">Greek
+</a>
+<li>
+<a href="http://www.google.com/intl/gn/">Guarani
+</a>
+<li>
+<a href="http://www.google.com/intl/gu/">Gujarati
+</a>
+<li>
+<a href="http://www.google.com/intl/xx-hacker/">Hacker
+</a>
+<li>
+<a href="http://www.google.com/intl/iw/">Hebrew
+</a>
+<li>
+<a href="http://www.google.com/intl/hi/">Hindi
+</a>
+<li>
+<a href="http://www.google.com/intl/hu/">Hungarian
+</a>
+<li>
+<a href="http://www.google.com/intl/is/">Icelandic
+</a>
+<li>
+<a href="http://www.google.com/intl/id/">Indonesian
+</a>
+<li>
+<a href="http://www.google.com/intl/ia/">Interlingua
+</a>
+<li>
+<a href="http://www.google.com/intl/ga/">Irish
+</a>
+<li>
+<a href="http://www.google.com/intl/it/">Italian
+</a>
+<li>
+<a href="http://www.google.com/intl/ja/">Japanese
+</a>
+</ul>
+</font>
+</td>
+<td valign=top nowrap width=1%>
+<font size=-1>
+<ul>
+<li>
+<a href="http://www.google.com/intl/jw/">Javanese
+</a>
+<li>
+<a href="http://www.google.com/intl/kn/">Kannada
+</a>
+<li>
+<a href="http://www.google.com/intl/kk/">Kazakh
+</a>
+<li>
+<a href="http://www.google.com/intl/xx-klingon/">Klingon
+</a>
+<li>
+<a href="http://www.google.com/intl/ko/">Korean
+</a>
+<li>
+<a href="http://www.google.com/intl/ku/">Kurdish
+</a>
+<li>
+<a href="http://www.google.com/intl/ky/">Kyrgyz
+</a>
+<li>
+<a href="http://www.google.com/intl/lo/">Laothian
+</a>
+<li>
+<a href="http://www.google.com/intl/la/">Latin
+</a>
+<li>
+<a href="http://www.google.com/intl/lv/">Latvian
+</a>
+<li>
+<a href="http://www.google.com/intl/ln/">Lingala
+</a>
+<li>
+<a href="http://www.google.com/intl/lt/">Lithuanian
+</a>
+<li>
+<a href="http://www.google.com/intl/mk/">Macedonian
+</a>
+<li>
+<a href="http://www.google.com/intl/ms/">Malay
+</a>
+<li>
+<a href="http://www.google.com/intl/ml/">Malayalam
+</a>
+<li>
+<a href="http://www.google.com/intl/mt/">Maltese
+</a>
+<li>
+<a href="http://www.google.com/intl/mr/">Marathi
+</a>
+<li>
+<a href="http://www.google.com/intl/mo/">Moldavian
+</a>
+<li>
+<a href="http://www.google.com/intl/mn/">Mongolian
+</a>
+<li>
+<a href="http://www.google.com/intl/ne/">Nepali
+</a>
+<li>
+<a href="http://www.google.com/intl/no/">Norwegian
+</a>
+<li>
+<a href="http://www.google.com/intl/nn/">Norwegian (Nynorsk)
+</a>
+<li>
+<a href="http://www.google.com/intl/oc/">Occitan
+</a>
+<li>
+<a href="http://www.google.com/intl/or/">Oriya
+</a>
+</ul>
+</font>
+</td>
+<td valign=top nowrap width=1%>
+<font size=-1>
+<ul>
+<li>
+<a href="http://www.google.com/intl/ps/">Pashto
+</a>
+<li>
+<a href="http://www.google.com/intl/fa/">Persian
+</a>
+<li>
+<a href="http://www.google.com/intl/xx-piglatin/">Pig Latin
+</a>
+<li>
+<a href="http://www.google.com/intl/pl/">Polish
+</a>
+<li>
+<a href="http://www.google.com/intl/pt-BR/">Portuguese (Brazil)
+</a>
+<li>
+<a href="http://www.google.com/intl/pt-PT/">Portuguese (Portugal)
+</a>
+<li>
+<a href="http://www.google.com/intl/pa/">Punjabi
+</a>
+<li>
+<a href="http://www.google.com/intl/qu/">Quechua
+</a>
+<li>
+<a href="http://www.google.com/intl/ro/">Romanian
+</a>
+<li>
+<a href="http://www.google.com/intl/rm/">Romansh
+</a>
+<li>
+<a href="http://www.google.com/intl/ru/">Russian
+</a>
+<li>
+<a href="http://www.google.com/intl/gd/">Scots Gaelic
+</a>
+<li>
+<a href="http://www.google.com/intl/sr/">Serbian
+</a>
+<li>
+<a href="http://www.google.com/intl/sh/">Serbo-Croatian
+</a>
+<li>
+<a href="http://www.google.com/intl/st/">Sesotho
+</a>
+<li>
+<a href="http://www.google.com/intl/sn/">Shona
+</a>
+<li>
+<a href="http://www.google.com/intl/sd/">Sindhi
+</a>
+<li>
+<a href="http://www.google.com/intl/si/">Sinhalese
+</a>
+<li>
+<a href="http://www.google.com/intl/sk/">Slovak
+</a>
+<li>
+<a href="http://www.google.com/intl/sl/">Slovenian
+</a>
+<li>
+<a href="http://www.google.com/intl/so/">Somali
+</a>
+<li>
+<a href="http://www.google.com/intl/es/">Spanish
+</a>
+<li>
+<a href="http://www.google.com/intl/su/">Sundanese
+</a>
+<li>
+<a href="http://www.google.com/intl/sw/">Swahili
+</a>
+</ul>
+</font>
+</td>
+<td valign=top nowrap width=1%>
+<font size=-1>
+<ul>
+<li>
+<a href="http://www.google.com/intl/sv/">Swedish
+</a>
+<li>
+<a href="http://www.google.com/intl/tg/">Tajik
+</a>
+<li>
+<a href="http://www.google.com/intl/ta/">Tamil
+</a>
+<li>
+<a href="http://www.google.com/intl/tt/">Tatar
+</a>
+<li>
+<a href="http://www.google.com/intl/te/">Telugu
+</a>
+<li>
+<a href="http://www.google.com/intl/th/">Thai
+</a>
+<li>
+<a href="http://www.google.com/intl/ti/">Tigrinya
+</a>
+<li>
+<a href="http://www.google.com/intl/to/">Tonga
+</a>
+<li>
+<a href="http://www.google.com/intl/tr/">Turkish
+</a>
+<li>
+<a href="http://www.google.com/intl/tk/">Turkmen
+</a>
+<li>
+<a href="http://www.google.com/intl/tw/">Twi
+</a>
+<li>
+<a href="http://www.google.com/intl/ug/">Uighur
+</a>
+<li>
+<a href="http://www.google.com/intl/uk/">Ukrainian
+</a>
+<li>
+<a href="http://www.google.com/intl/ur/">Urdu
+</a>
+<li>
+<a href="http://www.google.com/intl/uz/">Uzbek
+</a>
+<li>
+<a href="http://www.google.com/intl/vi/">Vietnamese
+</a>
+<li>
+<a href="http://www.google.com/intl/cy/">Welsh
+</a>
+<li>
+<a href="http://www.google.com/intl/xh/">Xhosa
+</a>
+<li>
+<a href="http://www.google.com/intl/yi/">Yiddish
+</a>
+<li>
+<a href="http://www.google.com/intl/yo/">Yoruba
+</a>
+<li>
+<a href="http://www.google.com/intl/zu/">Zulu
+</a>
+</ul>
+</font>
+</td>
+<td width=95%>&nbsp;
+</td>
+</tr>
+<tr bgcolor=#ffffff>
+<td colspan=6>
+<font size=-1>
+<p>If you don't see your native language here, you can help Google create it by becoming a volunteer translator. Check out our 
+<a href="http://services.google.com/tcbin/tc.py">Google in Your Language
+</a> program.
+</font>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+<p>
+<br>
+<table cellspacing=0 cellpadding=3 border=0 width=92%>
+<tr bgcolor=#ffffff>
+<td>&nbsp;
+<a name=domains>
+<b>Visit Google's Site in Your Local Domain
+</b>
+</a>
+</td>
+</tr>
+<tr bgcolor=#cbdced>
+<td>
+<table width=100% cellpadding=8 cellspacing=0 border=0 bgcolor=#ffffff>
+<tr>
+<td width=%1 align=center valign=top nowrap>
+<font size=-1>
+<a href=http://www.google.ae>
+<img src=/images/flags/ae_flag.gif width=50 height=34 border=0>
+<br>www.google.ae
+</a>
+<br>???????? ??????? ???????
+</font>
+</td>
+<td width=%1 align=center valign=top nowrap>
+<font size=-1>
+<a href=http://www.google.com.af>
+<img src=/images/flags/af_flag.gif width=50 height=34 border=0>
+<br>www.google.com.af
+</a>
+<br>?????????
+</font>
+</td>
+<td width=%1 align=center valign=top nowrap>
+<font size=-1>
+<a href=http://www.google.com.ag>
+<img src=/images/flags/ag_flag.gif width=50 height=34 border=0>
+<br>www.google.com.ag
+</a>
+<br>Antigua and Barbuda
+</font>
+</td>
+<td width=%1 align=center valign=top nowrap>
+<font size=-1>
+<a href=http://www.google.off.ai>
+<img src=/images/flags/ai_flag.gif width=50 height=34 border=0>
+<br>www.google.off.ai
+</a>
+<br>Anguilla
+</font>
+</td>
+<td width=%1 align=center valign=top nowrap>
+<font size=-1>
+<a href=http://www.google.am>
+<img src=/images/flags/am_flag.gif width=50 height=34 border=0>
+<br>www.google.am
+</a>
+<br>&#1344;&#1377;&#1397;&#1377;&#1405;&#1407;&#1377;&#1398;

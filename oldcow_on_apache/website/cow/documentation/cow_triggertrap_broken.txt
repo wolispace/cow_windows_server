@@ -1,0 +1,10 @@
+##think:runsub logit;
+
+##logit:
+load $actor's triggerlist;
+loop paste "$action,$init_cmd,$c - $adelaide_time $adelaide_date";
+if $list_count > 15 then truncateit else continue;
+save $actor's triggerlist;
+
+##truncateit:
+loop shift; rem - remove the top entry from the list;

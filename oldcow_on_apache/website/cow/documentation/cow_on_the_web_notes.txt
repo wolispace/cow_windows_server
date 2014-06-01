@@ -1,0 +1,107 @@
+cow on the web notes
+----------------------------------
+Add commands to the commands table as the are passed &id=34&loc=98&cmd=put the cat on the chair
+actor=34
+loc=98
+command=put the cat on the chair
+
+When processing the commands one by one:
+1) find first command with the oldest add_date > 0
+2) update it with add_date = 0 so noone else messes with this
+3) find action from command
+4) based on the action, determin other components (put requires a target and a second and a hosthow
+5) if all params comply then continue otherwise  add msg in $loc that $actor could not $command $action_error_msg
+6) manipulate the objects as per the action adding msgs as per the action (usually $actor $actioned $target $extra $second)
+7) dont worry about deleting the old command as an admin function will clean these up
+
+When reading messages:
+1) use the last_message_read_datetime from the calling browser and return all msgs in their localtion or global msgs
+2) The browser will interpret the ID numbers into object names - if same as $id then insert (you)
+
+Object definition:
+Names:
+What used to be known as the 'name' of an object (chair, mouse, cat etc.. ) is now the 'class'. 
+We will now have several objects in the room of the same class (3 chairs) however one might be white, another black etc..)
+If you name something you get a white chair called Bob or a player called Frank
+When building the names for an object.. randomly choose 'named, called, known as...
+Special named objects simply use the name as well - 'sword of the wind, bow of might' - dropping the 'called' if the name starts with 'of '
+
+Owners:
+Objects can be owned.. this is like a link and replaces the qty with the owners name infront of the objects - if there is only one of it then the qty is ignored:
+- Wallace's small mouse
+- The bedroom door (???)
+- Frank's gold coins
+
+Descriptions:
+Objects have a full description constructed for them and updated each time they are used in a command.
+This saves having to generate this each time and is used in searches for specific classes of objects:
+- get the small white cat   = find obj  in same location as the actor with words 'small' and 'white' with a class of 'cat'
+ 
+
+
+----
+a cake				  [a] [cake]
+a small white cake		  [a] {small white} [cake]
+a piece of cake			  [a] <piece of> [cake]
+a piece of small white cake	  [a] <piece of> {small white} [cake]
+a piece of orange		  [a] <piece of> [orange]
+a bit of orange			  [a] <bit of> [orange]
+a flake of orange		  [a] <flake of> [orange]
+a segment of orange		  [a] <segment of> [orange]
+a bundle of sticks		  [a] <bundle of> [sticks]
+a bowl of oranges		  [a] <bowl of> [oranges]
+an orange cake			  [an] {orange} [cake]
+2 oranges			  [2] [oranges]
+2 orange cakes			  [2] {orange} [cakes]
+2 pieces of cake		  [2] <pieces of> [cake]
+2 pieces of orange cake		  [2] <pieces of> {orange} [cake]
+a stick of wood			  [a] <stick of> [wood]
+the sword of light		  [the] [sword] /"of light"/
+a cat called brian		  [a] [cat] /called "brian"/
+3 small mice			  [3] {small} [mice]
+an old triangular wooden boat	  [an] {old triangular wooden} [boat]
+[qty] <qty qualifyer> {attribs}	[class] /called	"name"/
+
+
+
+#[a] <piece of> {old triangular wooden} [boat] /called 'fred'/
+1-9999 | a | an | the  = qty
+remove from string and store qty value (0-99999)
+
+if (qty != 0) 
+if $str =~ /(.+) (.+) of (.+)/
+$rest = $1+' '+$3;		  
+$qty_type = $2;
+#{old triangular wooden} [boat] /called 'fred'/
+
+if($rest =~ /(.+) called (.+)/)
+if($rest =~ /(.+) named (.+)/)
+$rest =$1;			  
+$name = $2;
+#{old triangular wooden} [boat]
+
+if($rest =~ /(.+) (.+)/){
+ $attribs=$1;
+ $class=$2;
+ # find all matching attrib objects to each word and asign values..
+ # class=attribute,name=old,age=99
+ # class=attribute,name=wood,material='wood',colour='brown' (possible concept.. = float=1,hot='burn'
+ # class=attribute,name=small,size=2
+ #
+}else{
+ $class=$rest;  # no other attribs
+}
+
+
+
+
+if($qty==0)  check for a name of the class 'sword of light'
+
+
+
+
+if qty = 'the' its a 0 qty object and may have a trailing name:
+the '[class] [name_type] [name]' = the 'player called bob', the 'cup of happiness'
+
+
+if qty = 'a' or 'an' its qty = 1 and may 

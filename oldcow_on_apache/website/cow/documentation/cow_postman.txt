@@ -1,0 +1,97 @@
+##txick:runsub amidelivering;
+
+##amidelivering:
+if $actor's recipiant > 0 then deliver else movehome;
+
+##wakes:runsub whattodo;
+##mxail:runsub whattodo; 
+##talk:runsub talkingtome;
+##gives:runsub thankyou;
+
+##thankyou:
+say 'say',"[$actor] says 'Thankyou. I will deliver it as soon as possible.'";
+
+##whattodo:
+var $d to 3;
+rem say 'say',"[$actor] says 'Hmm.. I wonder if I have anything to deliver to [$init_obj]?'";
+var $nm to $init_obj's name;
+foreach in $loc do checkwhoto;
+foreach in $actor do checkwhoto2;
+if $found eq 1 then foundone else end;
+
+##checkwhoto:
+if $for_extra like $nm then setfound else end;
+
+##checkwhoto2:
+if $for_extra like $nm then setfound2 else end;
+
+##setfound:
+rem gather the letters for this player and put in the actor;
+var $found to 1;
+set $for_id's loc to $actor;        rem place inside the actor;
+clear $for_id,all;                  rem clean all hosting posing and xyz;
+
+##setfound2:
+var $found to 1;
+
+##foundone:
+if $init_obj's loc eq $actor's loc then stayhere else findplayer;
+
+##stayhere:
+say 'acts',"[$actor] looks around and sees [$init_obj]";
+say 'say',"[$actor] says 'Ah.. you are already in here.. no point rushing off to find you.'";
+runsub setupdelivery;
+
+##findplayer:
+say 'leaves',"[$actor] stuffs some things into is sack and rushes off looking for [$init_obj]";
+set $actor's home to $actor's loc;  rem remember where to come back to (postoffice);  
+var $dest to $init_obj's loc;
+set $actor's loc to $dest;
+var $loc to $dest;
+say 'arrives',"[$actor] rushes in with a huge sack over his shoulder";
+runsub setupdelivery;
+
+##setupdelivery:
+set $actor's recipiant to $init_obj; rem remember this so txick knows who to deliver to;
+set $actor's recipname to "$nm";       rem remember the name of this player;
+var $how to (slowly,quickly,hurridly,urnestly,calmly,frantlicly);
+var $int to (delves into,rummages in,searches in,looks in,reaches into);
+say 'act',"[$actor] $how $int his sack";
+
+code $actor switch on;               rem start the postman dropping each letter;
+
+##deliver:
+var $isfor to $actor's recipiant;
+var $recipname to $actor's recipname;
+foreach in $actor do checkmail;
+set $actor's recipiant to 0;
+say 'force','force:look';
+
+##checkmail:
+if $for_extra like $recipname then dropmail else end;
+
+##dropmail:
+var $msg to (Ah ha!,Well looky here,Whats this?,Well I'll be..,My my..,You are lucky,Its your lucky day,Oh my..); 
+say 'say',"[$actor] says '$msg' and drops [$for_id] for $recipname";
+set $for_id's loc to $loc;
+
+##movehome:
+say 'force','force:look';
+say 'say',"[$actor] says 'I hope you enjoy it. Feel free to post something in reply at the Post Office in the Old Town";
+say 'leaves',"[$actor] rushes back to the Post Office";
+set $actor's loc to $actor's home;
+var $recipname to $actor's recipname;
+var $loc to $actor's loc;
+say 'arrives',"[$actor] arives and says 'I'm exhausted after delivering some mail to $recipname'";
+code $actor switch off;               rem only turn on time when delivering;
+say 'force','force:look';
+
+##talkingtome:
+if $target eq $actor then instructions else end;
+
+##instructions:
+load $actor's instructions;
+foreach in list do sayit;
+
+##sayit:
+say 'say',"[$actor] says '$list_line'";

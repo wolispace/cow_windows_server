@@ -1,0 +1,50 @@
+##txick:runsub amidelivering;
+
+##amidelivering:
+if $actor's recipiant > 0 then deliver else movehome;
+
+##deliver:
+var $isfor to $actor's recipiant;
+var $recipname to $actor's recipname;
+foreach in $actor do checkmail;
+set $actor's recipiant to 0;
+say 'force','force:look';
+
+##checkmail:
+if $for_extra like $recipname then dropmail else end;
+
+##dropmail:
+var $msg to (Ah ha!,Well looky here,Whats this?,Well I'll be..,My my..,You are lucky,Its your lucky day,Oh my..); 
+say 'say',"[$actor] says '$msg' and drops [$for_id] for $recipname";
+set $for_id's loc to $loc;
+
+##movehome:
+say 'force','force:look';
+say 'say',"[$actor] says 'I hope you enjoy it. Feel free to post something in reply at the Post Office in the Old Town";
+say 'leaves',"[$actor] rushes back to the Post Office";
+set $actor's loc to $actor's home;
+var $recipname to $actor's recipname;
+var $loc to $actor's loc;
+say 'arrives',"[$actor] arives and says 'I'm exhausted after delivering some mail to $recipname'";
+code $actor switch off;               rem only turn on time when delivering;
+say 'force','force:look';
+
+
+##gives:runsub isitme;
+
+##isitme:
+if $actor eq $second then isitthem else end;
+
+##isitthem:
+if $target > 0 then checkmoney else end;
+
+##checkmoney:
+var $fee to 10;
+var $purse to $init_obj's worth;
+take $fee from $purse;
+if $purse > 0 then deliveritem else end;
+
+##deliveritem:
+say 'says',"[$actor] says 'Righty, that will be $fee $coinage'";
+say 'acts',"[$actor] takes the money and rushes off to find $target";
+var $dest to $init_obj's loc;

@@ -1,0 +1,220 @@
+=head2 Tue Nov  2 10:01:41 1999: C<Module> L<Win32>
+
+=over 4
+
+=item *
+
+C<installed into: P:\Apps\ActivePerl\temp\site\lib>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.151>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Nov  2 10:02:05 1999: C<Module> L<Compress::Zlib>
+
+=over 4
+
+=item *
+
+C<installed into: P:\Apps\ActivePerl\temp\site\lib>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.03>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Nov  2 10:02:12 1999: C<Module> L<Archive::Tar>
+
+=over 4
+
+=item *
+
+C<installed into: P:\Apps\ActivePerl\temp\site\lib>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.072>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Nov  2 10:02:24 1999: C<Module> L<MIME::Base64>
+
+=over 4
+
+=item *
+
+C<installed into: P:\Apps\ActivePerl\temp\site\lib>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 2.11>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Nov  2 10:02:43 1999: C<Module> L<URI>
+
+=over 4
+
+=item *
+
+C<installed into: P:\Apps\ActivePerl\temp\site\lib>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.04>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Nov  2 10:02:53 1999: C<Module> L<HTML::Parser>
+
+=over 4
+
+=item *
+
+C<installed into: P:\Apps\ActivePerl\temp\site\lib>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 2.23>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Nov  2 10:03:38 1999: C<Module> L<libwww-perl>
+
+=over 4
+
+=item *
+
+C<installed into: P:\Apps\ActivePerl\temp\site\lib>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 5.45>
+
+=item *
+
+C<EXE_FILES: bin/lwp-request bin/lwp-mirror bin/lwp-rget bin/lwp-download>
+
+=back
+
+=head2 Tue Nov  2 10:04:20 1999: C<Module> L<XML::Parser>
+
+=over 4
+
+=item *
+
+C<installed into: P:\Apps\ActivePerl\temp\site\lib>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 2.27>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Nov  2 10:04:28 1999: C<Module> L<XML::Element>
+
+=over 4
+
+=item *
+
+C<installed into: P:\Apps\ActivePerl\temp\site\lib>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.10>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Nov  2 10:04:34 1999: C<Module> L<PPM>
+
+=over 4
+
+=item *
+
+C<installed into: P:\Apps\ActivePerl\temp\site\lib>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.1.1>
+
+=item *
+
+C<EXE_FILES: bin/ppm.pl>
+
+=back
+

@@ -1,0 +1,54 @@
+concepts about Perl and COW
+
+one script to get user input and put it in a cue of tasks
+one script to to process cue of tasks (loops) (auto starts if not running)
+one script to displat current location/msgs
+
+
+cow heart - loops processing tasks
+- generates pages of al current active players locations
+- player simply gets it displayed to them
+- generates pages of active msgs
+
+The cow heart processes all in its current cue of tasks then waits 1 seconds before checking 
+for an udpated stack.  F new commands are added to the stack then it does them straight away.
+
+All actions that take place in a location, have that location described in a file:
+
+Location file names and structure:
+123.loc - described objects with their numbers encoded (but not shown) so it can be personalised
+
+45 a small white mouse 
+wearing
+384 a leather jacket
+beside
+45 the mouse
+is 
+28 a box 
+with
+398 some wooden dice
+inside
+
+Or indicate relationships with nesting:
+45 a small while mouse
+	wearing
+	384 a leather jacket
+	beside
+	28 a box 
+		inside
+		398 some wooden dice
+
+you can see a	small while mouse wearing a leather jacket.
+beside the mouse is a box with some wooden dice inside.
+
+you can see a	small while mouse (you) wearing a leather jacket.
+beside you is a box with some wooden dice inside.
+
+
+
+
+
+
+
+123.msg - a text file will all messages for that location.
+

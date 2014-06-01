@@ -1,0 +1,7 @@
+From: [from]
+To: wm@wolispace.com
+Subject: about wolispace
+
+[body]
+
+

@@ -1,0 +1,16 @@
+> Workaround - separate the js and the html into separate strings, call
+> these 'jsCode' and 'htmlCode'.
+> Then, add the js into the doc with something like:
+> 
+>   var js = document.createElement("script");
+>   js.setAttribute("language", "Javascript");
+>   js.setAttribute("style", "text/javascript");
+>   js.textContent = jsCode;
+>   document.body.appendChild(js);
+> 
+> Then, add the html into the doc with something like:
+> 
+>   var d = document.createElement("div");
+>   d.innerHTML = htmlCode;
+>   document.body.appendChild(d);
+> 

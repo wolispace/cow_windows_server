@@ -1,0 +1,695 @@
+<!--
+<i>Note:
+How works the manual, when having new ideas we can put then at the end of the doc, then does a diff between online version and working version on my PC to be sure that there is no other changes inside the the doc. Then I put that well organized. comments to be added at the begining. The working doc is the manual in my office.
+</i>-->
+<a name=up></a>  <h3>TOC</h3>
+<b><a href=#intro class=cmd>Introduction to COWScript</a></b>
+<b><a href=#blocks class=cmd>About blocks or subs</a></b>
+<b><a href=#cmds class=cmd>About commands</a></b>
+<b><a href=#fields class=cmd>The anatomy of an object</a></b>
+<b><a href=#oldcmds class=cmd>COWscript commands</a></b> <i>(old presentation)</i>
+<b><a href=#defs class=cmd>Definitions</a></b>
+<b><a href=#moredefs class=cmd>More detailed definitions</a></b>
+<b><a href=#fullcmds class=cmd>The full list of commands</a></b>
+<b><a href=#infostorage class=cmd>Extra Info storage</a></b>
+<b><a href=#infolinks class=cmd>Notes on the written content of an object</a></b>
+
+
+<!-- intro (comments to help navigating in the html source thanks to the nice blue color) -->
+<a name=intro></a>
+<h2>Introduction to COWScript</h2>
+COWScript consists of one or more blocks (sometimes called subs)
+of named code containing one or more commands.
+
+eg:
+<code>        ##setloc:
+    var $dest to $actor's loc;
+    if $target's loc eq $desc then sayhere else saythere;</code>
+
+<!-- blocks --> 
+<a name=blocks></a>
+<span class=edit_h1>About blocks or subs:</span> <a href=#up class=cmd>up</a>
+
+A block starts with a double hash '##' and ends at the start of the next double hash or the end of the code.
+
+The name of the block of code immediately follows the double hash and ends with the first colon ':'. In the above example the code block is called 'setloc'.
+
+You can name your blocks almost anything you like, just avoid spaces and punctuation and 'key words' used for triggering reactions. If an object contains a block name that matches a 'key word' used in a message, the object will perform that block of code (see About reacting objects below).
+
+Blocks of code are named so you can make logical jumps from one block to another.
+
+When you use IF to logically choose one block or another, any code following the IF (up the the next block) will be executed after the called block.
+
+<!-- cmds -->
+<a name=cmds></a>
+<span class=edit_h1>About commands:</span> <a href=#up class=cmd>up</a>
+
+Each command within a block of code starts with a 'command word' and ends with the first semi-colon ';'.
+
+The above example has two commands 'var' and 'if'.
+
+You can use the redundant niceness of 'please', 'thanks' and 'thankyou' in your commands if your in the mood.  They have no impact on your commands execution but they might make you feel better when reading the code.
+
+<code>please set $actor's loc to $dest;
+set $tactor's loc to $target's loc thanks;
+</code>
+This is my little hommage to INTERCAL 
+link: http://www.google.com/search?q=intercal
+
+The parameters of each command are selerated initially by a space however additional parameters may be seperated by spaces, commasor keywords as defined for each command.
+
+In the above example:
+
+<code>'if_{operand}_{operator}_{operand}_then_{sucess}_else_{fail};'</code>
+
+If has 7 params seperated by spaces.
+
+White spaces and new lines around commands are ignored and can be used to make the code block more legible. The above example could have been written as:
+
+<code>##setloc:var $dest to $actor's loc;if $target's loc eq $actor's loc then sayhere else saythere;</code>
+
+Any named object in the current location will be executed as a command.
+
+eg. a pig named mike
+player types 'mike come here'
+if the pig is coded like a command it will be performed.
+
+Global commands anyone can use anywhere are 'command' objects called or named the command name eg 'a command called get'.
+
+If a command objects it no in one of the books in the library it will still work as a valid command however you wont be able to read about it via the 'commands' command.
+
+When finding a command to execite cow first looks inside the player, then in the players current location, then finally anywhere in cow.
+
+This way an action called get in the current location will be used to perform the get command instead of the global get command.
+
+So if you want to override specific commands in some places, just make named objects in a location and hide them. (pose it as hidden then hput it on itself and it dissapears from view)
+
+<!-- fields -->
+<a name=fields></a>
+<span class=edit_h1>The anatomy of an object</span> <a href=#up class=cmd>up</a>
+
+read: [1250]
+
+<!-- oldcmds -->
+<a name=oldcmds></a>
+<span class=edit_h1>COWscript commands:</span> <a href=#up class=cmd>up</a>
+
+<i>(Is going to be completly remplaced by the new full list of commands. See further. Kept here for the time this new part is not finished).</i>
+<pre>
+if {condition} then {true_sub_name} else {false_sub_name};
+get {$target | $target,to,$text | $text,'to',$target | $target,$ret,$second | $pretext,$target} in {$object};
+msg {$loc},{$actor},{$target},{$second},"{trigger_cmd_name}","{msg_text}";
+say "{trigger_cmd_name}","{msg_text}";
+set {thing} to {thing};
+var {$variable} to {thing};
+new {full_object_description_text};  // sets $target and $new_loc and $old_target
+find {$thing},{$thing|random filter};       // sets $found_id and $found_loc
+foreach in {$loc} do {sub_name} {filter};     // fore each object in this location do the named sub. 
+look {$loc},{method};                // populates the locaiton and sys_msg strings
+                                        with current location based on method.
+goto {sub_name};                     // continue execution from this named sub
+case {thing} do {sub_name};          // do the sub based on the thing passed
+mode {mode_name};
+call "{user_cmd_string}";            // must be in quotes
+copy {thing};                        // makes a duplicate copy of an object
+touch {object};                      // updates the objects upd_time so it wont be
+                                        deleted.. all GET objects are touched so this
+                                        is probably redundant.
+code {thing} cut|copy|paste {code}   // manipulate the code of an object
+add {value} to {$variable}
+take {value} from {$variables}
+swap {$variable} so {thing} is {thing} // swaps one string with another in the named variable swap $newname so "black" is "white"  - swap #newclass so $target's class is $new_colour; # list is returned to $current_loc 
+colour {thing}                       // 
+dedupe {thing}                       // removes duplicate instances of the specified object
+list {criteria}                      // lists all objects (no in void) based on criteria - default is all new objects.
+nudge {thing},up|down|left|right|north|east|south|west  // change an objects x,y,z
+clear {thing},xyz|all                // clear objects x,y,z and or pose,host and hosthow - 
+load {thing}
+save {thing}
+loop {blocktorun|cut text|copy text|paste text}
+</pre>
+<!-- defs -->
+<a name=defs></a>
+<span class=edit_h1>Definitions:</span> <a href=#up class=cmd>up</a>
+
+{thing} = {obj_field | $var | "string"}
+{condition} =  {thing} {like | eq | ne | > | < | != } {thing}
+{obj_field} = {{resolves_to_obj_id}'s }field}  eg: $actor's host's link's host's qty
+{msg_text}  = "[$actor] did $action with params of $cmd_text" If you enclose a variable in [] then it will be translated into then name of the object represented by the value of the variable
+{trigger_cmd_name} =  a simple word used to find objects which react to the action performed eg get and eat should both used the trigger_word 'get'
+{user_cmd_string} = a command as if typed by a user eg 'call create a cat;' will cause the current actor to create a cat
+{code} = iether part of a codename to match OR a block of code to paste
+$var = a temp variable created for use only while this object is performing its commands. (there are some pre-defined variables $actor, $loc, $cmd_text, $init_obj, $init_cmd etc.. I will describe later).
+
+find method = 'random' = pick a random object in this location..
+look method = 'list|full|inv|examine|trade' 
+If var ends with [1] then only return the first word of string: $text = 'to the fish' $text[1] returns 'to'
+If the code of an command is 'code like {object}' the that named command will be used eg 'same as paint'
+<pre>
+new  sets vars:    $target,$new_loc
+find sets vars:    $found_id,$found_loc;
+foreach sets vars: $for_id,$for_link,$for_class,$for_name,$for_code,$for_info,$for_extra,$for_host
+look sets vars:    $current_loc or $sys_msg with description of the obj $loc, method is 'inv','list','examine' or blank for default location description
+copy sets vars:    $new_id,$new_loc
+</pre>
+
+If you want to change the default click command do this:
+<code>var $click_cmd to 'watch';
+var $desc_intro to 'Click on an object to watch:';
+look $loc,list
+case $actor's weight do something,another,secondsub;  // starts at 0 
+</code>
+<!-- moredefs -->
+<a name=moredefs></a>
+<span class=edit_h1>More detailed definitions</span> <a href=#up class=cmd>up</a>
+
+{thing}
+
+A thing in a command can be one of several things, it always resolves itself into a value but it can be derived from several sources.
+A thing can be: 
+a constant number eg 123
+a constant string of text "old and crumbly"
+the ID number (obj_id) from the named object eg $actor,$loc,$target etc..
+a field value from a named object eg $actor's host -or- $target's link etc..
+This concept needs a little more explanation:
+ In an effort to make the syntax very english-like I have opted for the delimiter of "'s " to seperate the objects unique ID and its field name.
+ See 'The anatomy of an object' to see what fields an object has.
+ Logically you can continue chaining values until you reach your desired value eg $actor's host's loc's link's loc's class
+ (does not appear to be working beyond 2 levels - code still in progress)
+
+<!-- fullcmds -->
+<a name=fullcmds></a>
+<span class=edit_h1>The full list of commands</span> <a href=#up class=cmd>up</a>
+
+add, call, case, clear, <b>code</b>, colour, copy, dedup, exam, <b>get</b>, goto, <b>find</b>, <b>foreach</b>, <b>if</b>, list, load, look, mode, msg, new, nudge, <b>random</b>, runsub, say, set, swap, take, today, touch, <b>var</b>
+
+<!-- ADD --><a name=ADD></a>
+<span class=edit_h1>ADD</span> <a href=#fullcmds class=cmd>up to full list</a>
+
+description:
+
+Syntax:
+<code></code>
+
+Example:
+
+<!-- CALL --><a name=CALL></a>
+<span class=edit_h1>CALL</span> <a href=#fullcmds class=cmd>up to full list</a>
+
+lets the current actor simply perform commands as if they had typed them.
+
+Syntax:
+<code>call "command string with embedded variables"</code>
+
+Example:
+call "think whats is [$init_obj] doing now!?!"
+call "get $found_id";
+call "go north";
+
+<!-- CASE --><a name=CASE></a>
+<span class=edit_h1>CASE</span> <a href=#fullcmds class=cmd>up to full list</a>
+
+Runs the nth block of code based on the value used in the case statement.
+
+If the value is larger than the number of blocks named then nothing is done.
+
+Syntax:
+<code>case {number} do {list_of_block_names};
+</code>
+
+Example:
+<code>case $actor's counter do say1,say2,say3,say4;
+##say1:say 'msg',"[$actor] counter is one";
+##say2:say 'msg',"[$actor] counter is two";
+##say3:say 'msg',"[$actor] counter is three";
+##say4:say 'msg',"[$actor] counter is four";
+</code>
+
+<!-- CLEAR --><a name=CLEAR></a>
+<span class=edit_h1>CLEAR</span> <a href=#fullcmds class=cmd>up to full list</a>
+
+Use this to clear the pose, host and x,y,z positions of an object.
+
+if you specify 'all' then everything gets cleared.
+if you specify 'xyz' then just the x,y and z values are cleared.
+
+Syntax:
+<code>clear {object},all|xyz</code>
+
+Example:
+<code>clear $target,all;
+clear $actor,xyz;
+</code>
+
+<!-- CODE --><a name=CODE></a> <span class=edit_h1>CODE</span> <a href=#fullcmds class=cmd>up to full list</a>
+
+Manipulate the code of an object. You can cut, copy and paste sections of code.
+
+Syntax:
+<code>code {thing} cut|copy|paste|switch on/off {code_name|"string"|$variable};</code>
+
+Returns:
+<code>$orig_code</code>    is set to the code of the named object prior to the action.
+<code>$copy_code</code>    is a subset of all code blocks matching the name specified (result of cut and copy).
+<code>$new_code</code>    is the entire code pasted back into the object (result of cut and paste).
+
+Example:
+if you want to get all of the code blocks matching 'xnewobj' from the target object do this:
+<code>code $target's code copy 'xnewobj';</code>
+
+This will find ##newobj:  and ##newobj1: and ##newobjcontinue: etc.. and put it in $copy_code for later use.
+
+To paste this code into the second object:
+<code>code $second's code paste $new_code;</code>
+
+To remove all instances of code refering to 'move' from the actor:
+<code>code $actor's code cut "move";</code>
+
+To append all of the code from the target into the second do this:
+<code>code $target's code copy "junk";</code>
+<code>code $second's code paste $new_code;</code>
+
+To completely duplicate the code from the target to the second use the SET command:
+<code>set $second's code to $target's code;</code>
+
+<i>Note: paste just adds the code to the bottom of the object's current code and duplications of code blocks may result in unpredictability.</i>
+
+To turn an objects tick or tickloc on or off use code like this:
+<code>code $target switch on;</code>
+<code>code $actor's host switch off;</code>
+
+This turns all instances of tick into txick and visa-versa.
+
+<!-- COLOUR --><a name=COLOUR></a>
+<span class=edit_h1>COLOUR</span> <a href=#fullcmds class=cmd>up to full list</a>
+
+descr.
+
+Syntax:
+<code></code>
+
+Example:
+
+<!-- COPY --><a name=COPY></a>
+<span class=edit_h1>COPY</span> <a href=#fullcmds class=cmd>up to full list</a>
+
+Copies the named object.
+
+Sets the variable $new_id to the new objects ID.
+
+Syntax:
+<code>copy {object}</code>
+
+Example:
+<code>
+copy $target;
+</code>
+
+<!-- DEDUP --><a name=DEDUP></a>
+<span class=edit_h1>DEDUP</span> <a href=#fullcmds class=cmd>up to full list</a>
+
+Reduces duplicate objects into one with appropriate quantity.
+
+use it after you have used <b>new</b> if you dont want lots of individual objects created.
+
+It finds the location of the object you name and dedupes in that location, accumulating all quantities and leaving just one object that matches both class and name.
+
+Syntax:
+<code>dedupe {thing}</code>
+
+
+Example:
+<code>
+new a cat;
+dedupe $new_id;
+</code>
+<!-- EXAM --><a name=EXAM></a>
+<span class=edit_h1>EXAM</span> <a href=#fullcmds class=cmd>up to full list</a>
+
+descr.
+
+Syntax:
+<code></code>
+
+Example:
+
+
+<!-- GET -->
+<span class=edit_h1>GET</span> <a href=#fullcmds class=cmd>up to full list</a>
+
+Work out which object's ID or string of text the player is refering to and sets the associated variables. If the player typed 'open the red door', then the OPEN command will try and find 'the red door'.
+
+Syntax:
+<code>get {things} [in {locs}]</code>
+
+<code>get {things}</code> can be:
+<code>get $target</code>    just try and resolve the target object and nothing else
+<code>get $target,to,$text</code>    Resolve the target object and all text following the word 'to' eg. rename the cat to Frank
+<code>get $target,'to',$text</code>    same as above
+<code>get $pretext,$target</code>
+<code>get $target,$ret,$second</code>
+
+The {locs} is either one object the target and the second must be found in,
+or two objects separated by a comma where the target then the second must be found in if they are to be different. <i>***difficult to understand***</i>
+
+This concept allows us to specify that you can only give something in your carry to an object in the same location as you eg.
+<code>get $target,$rel,$second in $actor,$loc;</code>
+This says: find a target in the current actor and a second in the current location.
+
+There are a set range of things you can get:
+
+<code>get {$target | $target,to,$text | $text,'to',$target | $target,$ret,$second | $pretext,$target} in {$object1,$object2};</code>
+
+<code>$lastword</code> is automatically set as the last word in the string (specifcally for painting things: paint the cat orange)
+
+<!-- GOTO --><a name=GOTO></a>
+<span class=edit_h1>GOTO</span> <a href=#fullcmds class=cmd>up to full list</a>
+
+descr.
+
+Syntax:
+<code></code>
+
+Example:
+
+<!-- FIND --> <span class=edit_h1>FIND</span> <a href=#fullcmds class=cmd>up to full list</a>
+
+Finds an object in the selected location, either explicitly by name or randomly.
+
+Syntax:
+<code>find $loc,cat;</code>    this finds a cat in the current location
+<code>find $loc,random {options};</code>    this finds a random object in the current location taking into account options, see below..
+<code>find $loc,dusty path;</code>    finds an object called 'dusty path' in the current location..
+
+Options for find random:
+<li>doorway
+<li>not doorway
+<li>player
+<li>not player
+<li>not me
+<li>locked
+<li>not locked
+
+You can combine these in any combination eg:
+<code>find $loc,random not doorway not me not player;</code>
+<code>find $loc,random player;</code>
+<code>find $loc,random not me not locked;</code>
+<code>find $loc,random doorway;</code>
+
+<!-- FOREACH -->
+<span class=edit_h1>FOREACH</span> <a href=#fullcmds class=cmd>up to full list</a>
+
+Loops through objects or lines of a file, performing the named block for each item.
+
+Syntax:
+<code>foreach in {$thing|list} do {block} {options};</code>
+
+Options for the foreach are the same as the find:
+<li>doorway
+<li>not doorway
+<li>player
+<li>not player
+<li>not me
+<li>locked
+<li>not locked
+
+foreach sets vars: $for_id, $for_link, $for_class, $for_name
+after loading a list, foreach in list sets var: $list_line
+
+If you specify a location (your $thing resolves to an single id number) then the block is performed for every object in that location.
+
+<code>foreach in $loc do checkcolour not doorway not player;
+foreach in $actor's do interogate;</code>
+
+If you specify 'list' then the content of the last loaded list is used and the variable $list_line contains each item found in the list:
+
+<code>load $actor's mood;
+foreach in list do showmood;
+##showmood: say 'mood',"[$ator] $list_line";
+</code>
+
+If you specify an actual list then each item in the list will be used:
+
+<code>var $lst to ''reg,green,yellow with white dots,black'';
+foreach in $lst do showcolour;</code>
+
+
+<!-- IF -->
+<span class=edit_h1>IF</span> <a href=#fullcmds class=cmd>up to full list</a>
+
+If the contition is true the continue from the first named sub else continue from the last named sub. 
+
+Syntax:
+<code>if {thing} {like | eq | ne | > | < | != } {thing} then {true_sub_name} else {false_sub_name};</code>
+
+Example:
+<code>if $actor's host > 0 then onsomething else freestanding;</code>
+In this example we check to see if the $actor's host value is > 0.  If it is then continue with the code block named 'onsomething' otherwise continue with a sub called 'freestanding'. 
+
+<i>See the description of a 'thing' for more information.</i>
+
+
+<!-- LIST --><a name=LIST></a>
+<span class=edit_h1>LIST</span> <a href=#fullcmds class=cmd>up to full list</a>
+
+descr.
+
+Syntax:
+<code></code>
+
+Example:
+
+<!-- LOAD --><a name=LOAD></a>
+<span class=edit_h1>LOAD</span> <a href=#fullcmds class=cmd>up to full list</a>
+
+loads the contents of named thing into the global list @list for processing with <b>loop</b> or foreach.
+
+The first entry in the list is set into $listitem and a random item from te list is $randomiem.
+
+Use <b>save</b> to save back to a {thing} and <b>loop</b> or <b>foreach</b> to work with the lines of the list.
+
+If you have already loaded a list then the keyword 'incr' or 'increment' can be used to retrive the next top line from the list.  This is useful for stepping down through a list.
+
+Syntax:
+<code>load {thing|incr{ement}}</code>
+
+Example:
+load $actor's pocket;
+loop printcontent;
+
+or
+rem - say the first two lines from the actors memory;
+load $actor's memory;
+say 'msg',"[$actor] says '$listitem'";
+load increment;
+say 'msg',"[$actor] says '$listitem'";
+
+
+<!-- SAVE --><a name=SAVE></a>
+<span class=edit_h1>SAVE</span> <a href=#fullcmds class=cmd>up to full list</a>
+
+Saves the contents of the current global @list to a {thing}
+
+Use <b>load</b> to load a list from a {thing} and <b>loop</b> to work with the lines of the list.
+
+Syntax:
+<code>save {thing}</code>
+
+Example:
+load $actor's pocket;
+loop add "A new line for the list";
+save $actor's pocket;
+
+<!-- LOOK --><a name=LOOK></a>
+<span class=edit_h1>LOOK</span> <a href=#fullcmds class=cmd>up to full list</a>
+
+Not used. Use the 'say' or 'msg' facility to force the player/s to look.
+
+Syntax:
+<code></code>
+
+Example:
+
+<!-- LOOP --><a name=LOOP></a>
+<span class=edit_h1>LOOP</span> <a href=#fullcmds class=cmd>up to full list</a>
+
+Loop through the contents of the current global list @list and work with the lines its contains.
+
+You can add new lines to the list, remove lines and process blocks of code foe each line found using the loop command.
+
+When using cut and copy the global variable $list_clipboard is set the the matching line.
+
+When processing a block of code, the global variable $listitem is the current line.
+
+The cut and copy will do a partial match:  
+cut will remove all lines that match the string.
+copy will only set $list_clipboard the last match found.
+
+Syntax:
+<code>
+loop {blockname}
+loop {cut|copy|paste "string"}
+</code>
+
+Example:
+rem - example of printing out contents of an objects pocket variable;
+load $actor's pocket;
+loop showline;
+##showline:say,'msg',"[$actor]'s pocket contains $listitem";
+
+rem - example of adding a new lines to a specific objects info field;
+load $found_id's info;
+loop paste "[$actor] has added a new line to this";
+save $found_id's info;
+
+rem - example removing a line from a list which contain the word 'bad' ;
+load $found_id's memories;
+loop cut "bad";
+save $found_id's memories;
+
+rem - example finding the last line that matches the word 'good';
+load $found_id's memories;
+loop copy "good";
+say 'msg',"[$found_id] has '$line_clipboard' in its meories';
+
+<!-- MODE --><a name=MODE></a>
+<span class=edit_h1>MODE</span> <a href=#fullcmds class=cmd>up to full list</a>
+
+descr.
+
+Syntax:
+<code></code>
+
+Example:
+
+<!-- MSG --><a name=MSG></a>
+<span class=edit_h1>MSG</span> <a href=#fullcmds class=cmd>up to full list</a>
+
+descr.
+
+Syntax:
+<code></code>
+
+Example:
+
+<!-- NEW --><a name=NEW></a>
+<span class=edit_h1>NEW</span> <a href=#fullcmds class=cmd>up to full list</a>
+
+descr.
+
+Syntax:
+<code></code>
+
+Example:
+
+<!-- NUDGE --><a name=NUDGE></a>
+<span class=edit_h1>NUDGE</span> <a href=#fullcmds class=cmd>up to full list</a>
+
+descr.
+
+Syntax:
+<code></code>
+
+Example:
+
+<!-- RANDOM --><a name=RANDOM></a>
+<span class=edit_h1>RANDOM</span> <a href=#fullcmds class=cmd>up to full list</a>
+
+Returns a random number from 0 to the number specified.
+
+Syntax:
+<code>random n</code>
+
+Example:
+<code>var $num to random n;</code>
+
+<!-- RUNSUB --><a name=RUNSUB></a>
+<span class=edit_h1>RUNSUB</span> <a href=#fullcmds class=cmd>up to full list</a>
+
+descr.
+
+Syntax:
+<code></code>
+
+Example:
+
+<!-- SAY --><a name=SAY></a>
+<span class=edit_h1>SAY</span> <a href=#fullcmds class=cmd>up to full list</a>
+
+descr.
+
+Syntax:
+<code></code>
+
+Example:
+
+<!-- SET --><a name=SET></a>
+<span class=edit_h1>SET</span> <a href=#fullcmds class=cmd>up to full list</a>
+
+descr.
+
+Syntax:
+<code></code>
+
+Example:
+
+<!-- SWAP --><a name=SWAP></a>
+<span class=edit_h1>SWAP</span> <a href=#fullcmds class=cmd>up to full list</a>
+
+descr.
+
+Syntax:
+<code></code>
+
+Example:
+
+<!-- TAKE --><a name=TAKE></a>
+<span class=edit_h1>TAKE</span> <a href=#fullcmds class=cmd>up to full list</a>
+
+descr.
+
+Syntax:
+<code></code>
+
+Example:
+
+<!-- TODAY --><a name=TODAY></a>
+<span class=edit_h1>TODAY</span> <a href=#fullcmds class=cmd>up to full list</a>
+
+descr.
+
+Syntax:
+<code></code>
+
+Example:
+
+<!-- TOUCH --><a name=TOUCH></a>
+<span class=edit_h1>TOUCH</span> <a href=#fullcmds class=cmd>up to full list</a>
+
+descr.
+
+Syntax:
+<code></code>
+
+Example:
+
+<!-- VAR --><a name=VAR></a>
+<span class=edit_h1>VAR</span> <a href=#fullcmds class=cmd>up to full list</a>
+
+read [7338]
+
+<!-- infostorage -->
+<a name=infostorage></a><span class=edit_h1>Extra Info storage</span> <a href=#up class=cmd>up</a>
+
+Do this when looping through a list:
+
+<code>foreach in list do something;
+##something:
+if $list_line eq $init_obj's name then foundfriend else end;</code>
+
+The magical string variable $list_line is your current line while looping through the list.
+
+<!-- infolinks -->
+<a name=infolinks></a>
+
+read: [7337]

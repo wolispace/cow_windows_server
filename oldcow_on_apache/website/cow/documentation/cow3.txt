@@ -1,0 +1,79 @@
+COW 3
+
+Cow in a Windows Environment:
+
+Object:
+	One table of object properties, each with a pointer to the object name.
+	Run queries to quickly work out which objects are where.
+
+-- Base Functions -- (Do not rely on other functions)
+setObjVal (ObjNum, objType, objVal, mode) if mode="add" then add new record else update current record..
+getObjVal (ObjNum, ObjType) returns the value of the attrib of the numbered obj
+maxObj () returns the maximum number of named objects in the database (ObjType = 'name')
+displayMsg (msg) Adds the line of text to the messages box on the interface
+clearMsg () Clears the messages box on the interface
+
+-- Standard Functions -- (Automate basic tasks like creating new objects)
+seekObjName (name as string) returns objNum for the named object..
+createObj (ObjDesc,Location) Creates a new object in the given location..
+descObj (ObjNum, mode) describs the object to the level of detail set in mode
+findObj (lookfor, InThisLocation) As Long returns the ObjNum of the named or numbered Object in the given location
+stripQty (obj As String) As String removes a Qty phrase from an objects description ' 3 blind mice' returns 'blind mice' and sets its Qty = 3
+ValidateObj (objname, objLocation) returns the ObjNum of the obj in the location, if nor found it creates it there
+
+-- Trial functions -- (processing commands - test commands)
+ProcessCmds(cmdstring as string) attempts to process the cmdstring passed to it..
+Listall () lists all objects and their locations (not working yet)
+ValidateWorld () makes sure all essential world objects exist, creates if not (read txt file to do this)
+
+ -- Objects structure --
+ObjID - unique ID for this object
+ObjClass - unused at present , may distinguish between cmds and objects
+ObjType - type of object, name,colour,size,commands
+ObjVal - the value of the type
+ObjNum - which object is this attached to (ObjID)
+ObjAge - when was this object last accessed?
+ObjCode - code to run when this obje is called
+
+' how to handle enclosed values in a 'functions' in cow cmdline
+1. work out what the command is
+2. work out what the delimiter for the command is
+3. get the bits of the command
+4. parse the commands until they can be parse no more!
+
+The upshot of this is that we need to use brackets to define the beging and end of the values
+
+so when a user types a command we have to insert the brackets!!!
+
+/put the cat under the mat
+/put(cat,on,mat)
+/put(%t,%w,%s)
+/put(thing1,"on",thing2)
+/put(192,"on",231)
+
+/put(%target in /findobj("void"))
+
+
+14/9/99 COW 3 in DB3
+Using Neville Cooks Db3 database we will ahve to build and rebuild indexes as we go so:
+
+Indexes required:
+a#ObjName = ObjNumber
+
+o#ObjNum = ObjName
+        #g = ObjAge
+		  #c = ObjClass
+		  #a = AttribType|Attribvalue
+		  #p = ParentObj
+		  #h = list of hosted objects.. in list|on list
+		  #r#class = commands..
+
+#class = list of objs that react to this class..
+
+9/10/99
+
+
+
+
+
+

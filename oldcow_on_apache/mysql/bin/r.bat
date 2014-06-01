@@ -1,0 +1,2 @@
+pskill.exe --help
+pause

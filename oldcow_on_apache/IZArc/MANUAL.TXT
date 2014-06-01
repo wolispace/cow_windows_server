@@ -1,0 +1,155 @@
+
+
+                            User's Manual
+                           ~~~~~~~~~~~~~~~
+
+                    IZArc Command Line Add-On v1.0
+         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+=====================================================================
+==========================  Using IZARCC  ===========================
+=====================================================================
+
+  izarcc [-commands] [-options] archivefile [@list] [files...]
+
+  Commands:
+
+    a               : add files to archive (default action)
+    u               : update files to archive
+    m               : move files to archive (files only)
+    d               : delete files from archive
+
+    r               : recurse into subfolders (include subfolders)
+    p|P             : store relative pathnames|store full pathnames
+    c<0|f|n|x|b>    : set the compression level (0 - store; f - fast;
+                      n - normal; x - maximum; b - maximum (bzip2)
+                      LHA archives ... 1 : Frozen-5
+                                       2 : Frozen-6
+                      CAB archives ... 1 : MS-ZIP
+                                       2 : Quantum
+                                       3 : LZX
+    e<0..2>         : set encryption method (using password for ZIP, BH or JAR archive)
+                      0 - default Zip 2; 1 - AES-128bit; 2 - AES-256bit
+    s<password>     : specify a password
+    o               : change the archive's date to the newest file's date in archive
+    w               : include system and hidden files
+    @list           : compress the files listed in specified list
+    x<file>         : exclude specified file from the compression process
+    x@list          : exclude the files listed in specified list
+
+
+=====================================================================
+=====================  Example IZARCC commands  =====================
+=====================================================================
+
+  izarcc test.zip *.doc
+     --> compress all *.doc files from current directory to
+         archive test.zip
+
+  izarcc -a docs.zip "c:\my documents\*.doc"
+     --> compress all *.doc files from "c:\my documents" directory to
+         archive docs.zip
+
+  izarcc -a -x*.doc test.cab "c:\my documents\*.*"
+     --> compress all files from "c:\my documents" directory to
+         archive test.cab except *.doc files
+
+  izarcc -a test.zip @files.txt
+     --> compress all files specified in file "files.txt"  to archive
+         test.zip
+
+  izarcc -a -s123456 -cn -r oldfiles.bh "c:\Old Files\*.*"
+     --> compress all files from "c:\Old Files" directory and
+         subdirectories to archive oldfiles.bh with normal compression
+         and with password "123456"
+
+  izarcc -u docs.zip *.doc
+     --> update all *.doc files from current directory to
+         archive docs.zip
+
+  izarcc -d test.zip *.txt
+     --> delete all *.txt files from archive test.zip
+
+
+=====================================================================
+======================  Technical Information  ======================
+=====================================================================
+
+         Multivolume archives are not supported.
+
+         ZIP AES Encryption compatible with WinZip's AES standard.
+
+         Exit Codes:
+            0 --> no errors found
+            1 --> error in command line syntax, no action
+            2 --> error while compressing
+
+
+=====================================================================
+==========================  Using IZARCE  ===========================
+=====================================================================
+
+  izarce [-commands] [-options] archivefile [@list] [files...]
+
+  Commands:
+
+    e             : extract files from archive (default)
+    v             : list contents of archive
+    t             : test achive integrity
+
+    o             : overwrite existing files without prompting
+    f             : extract newer version of existing files only
+    n             : extract only newer files or non existing files
+
+    d             : recreate folder structure stored in archive
+    p<outputpath> : extract files to outputpath. default is current directory.
+    s<password>   : specify a password
+    @list         : extract only the files listed in specified list
+
+
+=====================================================================
+=====================  Example IZARCE commands  =====================
+=====================================================================
+
+  izarce test.zip
+     --> extracts all files from test.zip to the current directory.
+
+  izarce -d test.zip
+     --> extracts all files from test.zip, recreating the directory
+         structure from folder information stored in the archive file.
+
+  izarce -t docs.zip
+     --> test the integrity of docs.zip
+
+  izarce -d -p"c:\My documents" test.rar *.doc
+     --> extract all *.doc files from test.rar to "c:\My documents" directory
+         recreating the directory structure
+
+  izarce -v test.zip
+     --> lists contents of test.zip.
+
+  izarce test.zip @files.lst
+     --> extracts from test.zip all files that are listed
+         in the text file files.lst.
+
+
+=====================================================================
+======================  Technical Information  ======================
+=====================================================================
+
+         Extracting from .CAB files requires cabinet.dll.
+         Extracting from .RAR files requires unrar3.dll.
+         Extracting from .ACE files requires unacev2.dll.
+
+         Multivolume ARJ, CAB, RAR, ACE and ZIP archives are
+         supported.
+
+         IZARCE cannot test (-t) the contents of Microsoft CAB files.
+
+         ZIP AES Encryption compatible with WinZip's AES standard.
+
+         Exit Codes:
+            0 --> no errors found
+            1 --> error in command line syntax, no action
+            2 --> error while extracting

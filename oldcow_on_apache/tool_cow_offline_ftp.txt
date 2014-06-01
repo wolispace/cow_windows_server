@@ -1,0 +1,7 @@
+open nationalegend.com        
+nationb3
+essex28
+hash
+put index_base_offline.html public_html/creativeobjectworld/index_base.html
+put index_offline.html public_html/creativeobjectworld/index.html
+bye

@@ -1,0 +1,43 @@
+get $text,'to',$text2;
+if $text2 ne '' then complex else simple;
+##complex:
+new $text;
+var $door1 to $new_id;
+copy $new_id;
+var $door2 to $new_id;
+
+new $text2;
+update $new_id to "worth=0, loc=$door1, pose='hidden'";
+set $new_id's pwd to $actor's pwd; 
+
+update $door2 to "loc=$new_id, link=$door1, colour='lightgreen', worth=0, material='_door_'";
+
+update $door1 to "link=$door2, colour='lightgreen', worth=0, material='_door_'";
+
+say 'create',"[$actor] built [$door1] to somewhere interesting";
+relook $loc;
+
+##simple: 
+get $text;
+if $text ne '' then makeit else default;
+##default: 
+var $text to 'a place';
+goto makeit;
+
+##makeit: 
+new newexit;
+var $exit to $new_id;
+set $exit's worth to 0;
+
+new $text;
+update $new_id to "worth=0, link=$exit, material='_door_', colour='lightgreen'";
+
+update $exit to "link=$new_id, loc=$new_id, extra='from here', qty=1, class='exit', pclass='exits', colour='lightgreen', material='_door_'";
+
+say 'create',"[$actor] built [$new_id]";
+relook $loc;
+
+runsub noisy/3;
+##noisy:
+var $mmm to (hear the sounds of building,smell a new location,hear the sound of hammering);
+msg 0,$actor,0,0,"act","You can $mmm";

@@ -1,0 +1,174 @@
+if reacting to arrives then checkarrclass;
+if second of gives then checkgift;
+
+##checkarrclass:
+if $init_obj's class ne 'player' then donothing else amialive;
+
+##amialive:
+if $actor's health > 0 then checkown;
+
+##checkgift:
+$gmsg = "[$actor] shrugs at [$init_obj],'I can only accept gifts from my master.";
+if $actor's owner ne $init_obj then giveitback else checkgiftw;
+
+##checkgiftw:
+$wrth = $actor's worth;
+divide $wrth by 10;
+$gmsg = "[$actor] shrugs at [$init_obj],'Sorry master, but I can not accept gifts worth more than $wrth pennies.";
+if $target's worth > $wrth then giveitback else takegift;
+
+##checkown:
+if $actor's owner ne $init_obj then killit else hello;
+
+##hello:
+say 'msg',"[$actor] looks at [$init_obj] and says, 'Hello, master.'";
+
+##killit:
+set $actor's slot1 to $init_obj;
+call "attack $init_obj";
+
+##giveitback:
+say 'msg',"$gmsg";
+set $target's loc to $loc;
+set $target's pose to '';
+say 'msg',"[$actor] drops [$target]";
+relook $loc;
+
+##takegift:
+say 'msg',"[$actor] says,'Thank you, master.'";
+find $actor,'pouch';
+if $found_id > 0 then continue else makepouch;
+set $target's loc to $found_id;
+say 'msg',"[$actor] places [$target] inside [$found_id]";
+
+##makepouch:
+set $actor's pouch to 'treasure';
+say 'msg',"[$actor] makes a pouch";
+find $actor,'pouch';
+
+##tickloc:runsub ticked;
+
+##tickhour2:runsub tickhoured;
+
+##tickhoured:
+if $actor's health > 0 then nothing else pretick;
+
+##pretick:
+set $actor's counter to 51;
+runsub ticked;
+
+##ticked:
+$weapon is wielded by $actor;
+if $weapon > 0 then keepweap else getweap;
+if $actor's health > 0 then tickslot else dead;
+
+##tickslot:
+$who = $actor's slot1;
+if $who's loc ne $loc then tickfind else tickown;
+
+##tickfind:
+find $loc,random player;
+if $actor's owner ne $found_id then ticknewenemy else nothing;
+
+##ticknewenemy:
+if $found_id's health > 0 then tickattackit else corpsekick;
+
+##tickattackit:
+set $actor's slot1 to $found_id;
+call "attack $found_id";
+
+##corpsekick:
+$roll = random 4;
+case $roll do corpsekick1;
+
+##corpsekick1:
+$verb = (kicks,pokes,jabs,sniffs,scoffs at);
+$sentence = (serves you right,thats what you get,too bad for you,you are owned,smells like chicken,wipe that grin off your face);
+say 'msg',"[$actor] $verb [$found_id]'s body, '$sentence.'";
+
+##tickown:
+if $actor's owner ne $who then ticklife else tickfind;
+
+##ticklife:
+if $who's health > 0 then taunt else tickfind;
+
+##taunt:
+$sayverb = (taunts,jeers at,spits at,mocks);
+$name = (pigsbum,noob,dogsbreath,bootlicker);
+$option = random 10;
+case $option do taunt0,taunt1,taunt2;
+
+##taunt0:
+say 'msg',"[$actor] $sayverb [$who].";
+
+##taunt1:
+say 'msg',"[$actor] $sayverb [$who], 'what are you looking at, $name?'";
+
+##taunt2:
+say 'msg',"[$actor] $sayverb [$who], 'Is that all you can do, $name?'";
+
+if reacting to wish then dead;
+##any: runsub dead;
+
+##dead:
+print "flies buzz around [$init_obj]'s dead body";
+if $actor's counter < 1 then justdied;
+$cnt = $actor's counter;
+add 1 to $cnt;
+set $actor's counter to $cnt;
+if $actor's counter > 50 then respawn;
+
+##justdied:
+$actdead = (slumps to the floor,gasps one last breath then falls,cries out in agony then is silent);
+say 'msg',"[$actor] $actdead.";
+find $actor,'pouch';
+if $found_id > 0 then picktreasure;
+
+##picktreasure:
+find $found_id,random;
+if $found_id > 0 then treasure;
+
+##respawn:
+set $actor's pose to '';
+set $actor's health to $actor's healthmax;
+set $actor's counter to 0;
+say 'msg',"[$actor] returns to life!";
+$who = $actor's slot1;
+call "attack $who";
+
+##treasure:
+$wrth = $found_id's worth;
+$qty = $found_id's qty;
+$pclass = $found_id's pclass;
+copy $found_id;
+set $found_id's worth to $wrth;
+set $new_id's worth to $wrth;
+set $new_id's loc to $loc;
+set $new_id's pwd to '';
+set $new_id's pose to '';
+set $new_id's owner to $who;
+set $new_id's qty to $qty;
+set $new_id's pclass to $pclass;
+say 'msg',"[$actor] drops [$new_id]";
+relook $loc;
+
+##keepweap:
+if $actor's slot2 ne $weapon then keepweap2;
+
+##keepweap2:
+set $actor's slot2 to $weapon;
+say 'msg',"[$actor] looks at [$weapon] and grins wickedly";
+
+##getweap:
+$weapon = $actor's slot2;
+if $weapon > 0 then getweap2;
+
+##getweap2:
+if $weapon's loc eq $actor's loc then wieldit else whereisit;
+
+##wieldit:
+call "wield $weapon";
+
+##whereisit:
+say 'msg',"[$actor] looks around the room for [$weapon] but can't see it.";
+set $actor's slot2 to '';

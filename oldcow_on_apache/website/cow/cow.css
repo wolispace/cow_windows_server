@@ -1,0 +1,107 @@
+
+body{font:80% Tahoma, sans-serif; color:#E0E0BE; old:#3F6473; background:#103050;
+background-image:url(/cow/grade_blue.jpg); background-repeat: repeat-x;background-attachment: fixed;
+}
+
+code{font:90% tahoma;line-height:130%;color:maroon;background:white;width:auto;padding:1px 5px 1px 5px;}
+.click{background:white;width:auto;padding:1px 5px 1px 5px;}
+
+.sub {color:#c0c0c0;}
+.sml{font:60% Tahoma;}
+.xsml{font:50% Tahoma;}
+.nml{font:80% Tahoma;}
+.controls{font:80% Tahoma; margin:10px;}
+.speed{font:80% Tahoma;}
+
+.recover{border:2px;color:white;font-size:85%;}
+.recover:link{border:2px;color:white;font-size:85%;}
+.recover:hover{border:2px;color:yellow;font-size:85%;}
+
+a:link{color:#E7D3A3; text-decoration:none}
+a:hover{ color:yellow; background:#000000; text-decoration:none; !important;}
+a:visited{color:#E7D3A3;text-decoration:none; }
+
+.cmd:link{font:75% Tahoma; color:#7FBAC3; text-decoration:none;padding:1px 5px 1px 5px;}
+.cmd:hover{font:75% tahoma; color:yellow; background:black; text-decoration:none; !important;}
+.cmd:visited{font:75% tahoma; color:#7FBAC3;text-decoration:none; }
+
+.sml_list{font:75% Tahoma;width:100%;height:60px;border:1px solid transparent;background:#103050;color:#7FBAC3;}
+.fdbk{font-family:Tahoma,Arial;border-color:#346a9c;background:#9cbfda;color:#04233F;font-size:9;background-image:url(/cow/input_bg.jpg);baxckground-attachment:fixed;background-repeat:no-repeat;background-positiont:top left;}
+.nts{font-family:Tahoma,Arial;border-color:#346a9c;background:#9cbfda;color:#04233F;font-size:9;background-image:url(/cow/input_bg.jpg);bacxkground-attachment:fixed;background-repeat:no-repeat;background-positiont:top left;}
+textarea{padding-left:2px;font-family:Tahoma,Arial;border-color:#346a9c;background:#9cbfda;color:black;font-size:12;background-image:url(/cow/input_bg.jpg);background-repeat:no-repeat;background-positiont:top left;}
+input{font-family:Tahoma,Arial;border-color:#346a9c;background:#9cbfda;color:black;font-size:12;background-image:url(/cow/input_bg.jpg);background-repeat:no-repeat;background-positiont:top left;}
+
+.door{border-bottom:1px dotted slategrey;}
+.btn{font-family:Tahoma,Arial;font-size:9;}
+
+form{border:0;margin:0 0 2 0;}
+
+.sml_cmds{line-height:10px;line-height:}
+.cmd_locs:link{color:#7FBAC3; text-decoration:none;padding:1px 5px 1px 5px;}
+.cmd_locs:hover{color:yellow; background:darkblue; text-decoration:none; !important;}
+.cmd_locs:visited{color:#7FBAC3;text-decoration:none; }
+.click:link{font-size:85%;color:#7FBAC3; background:#103050; text-decoration:none;padding:1px 5px 1px 5px;}
+.click:hover{font-size:85%;color:yellow; background:black; text-decoration:none; !important;padding:1px 5px 1px 5px;}
+.click:visited{font-size:85%;color:#7FBAC3;text-decoration:none; background:#103050;padding:1px 5px 1px 5px;}
+.info {color:darkblue;  background:#F4F3C2; background-image:url(/cow/info_bg.jpg); bxackground-attachment:fixed;background-repeat:no-repeat;background-positiont:top left;margin:10px;padding:10px;width:90%;}
+.locs {bxackground: #0A2F52; height:auto; width:auto; padding:10px; line-spacing:30px; }
+
+#hint_h1 {font:75% Tahoma; font-weight:bold;}
+.hint_text {font:75% tahoma; padding:5px;}
+.sub {color:#c0c0c0;}
+.you {color:#c0c0c0; font-size:75%;}
+.cmd {color:#7FBAC3;}
+.debug {color:red;}
+.locked{font-weight:bold;}
+.closed{font-style:italic;}
+.face{font-style:bold;}
+.edit_h1{font-weight:bold;}
+.bold{font-weight:bold;}
+.emf{color:white; font-weight:bold;}
+.clr{font-weight:bold;}
+
+.edit_textarea{width:100%; height:100%; font:70% lucida console,tahoma ;}
+
+.hide{visibility:hidden;}
+img{border:0}
+
+.logon_form{width:350px;background:#103050 url(/cow/grade_blue.jpg);background-repeat:repeat-x;margin:10px;padding:10px;border:3px solid darkgrey;}
+
+
+#info{width:100%;height:2%;margin:0px 0px 0px 0px;}
+#msgs{width:100%;height:42%;;overflow-y:scroll;overflow:-moz-scrollbars-vertical; background:#103050 url(/cow/grade_blue.jpg);background-repeat:repeat-x;margin:0px 0px 2px 0px;}
+#locs{width:auto;height:45%;overflow-y:scroll;overflow:-moz-scrollbars-vertical; background:#103050 url(/cow/grade_blue.jpg);background-repeat:repeat-x;margin:0px 0px 2px 0px;}
+#edit{overflow-y:scroll;overflow:-moz-scrollbars-vertical;background:#103050 url(/cow/grade_blue.jpg);background-repeat:repeat-x;}
+#view{overflow-y:scroll;overflow:-moz-scrollbars-vertical;background:#103050 url(/cow/grade_blue.jpg);background-repeat:repeat-x;}
+#editarea{float:right;left:0px;height:80%;width:100%;}
+#editmenu{float:right;}
+#uinput{width:102%;height:45px;left:0px;position:absolute;bottom:1px;padding:3px 0px 0px 0px; background-image:url(/cow/grade_blue.jpg);background-repeat:repeat-x;}
+#mlist{width:200px;height:100px;border:1px solid black;}
+#error{width:100%;height:auto;}
+#rep{width:100%;height:auto;position:absolute;top:-5000;}
+#lcm{width:100px;height:15px;position:absolute;left:-80px;bottom:0px;text-align:right;background-image:url(/cow/grade_blue.jpg);background-repeat:repeat-x;}
+#lcm{opacity:.9;MozOpacity:.9;KhtmlOpacity:.50;filter:alpha(opacity=50);overflow:hidden; }
+#lcmd{width:100%;height:95%;background-image:url(/cow/grade_blue.jpg);background-repeat:repeat-x;}
+#banner{width:100%;height:30px;}
+#users{position:absolute;top:0px;left:5px;}
+.form{margin:0px;border:0px;}
+#cmt{position:absolute;top:2px;right:10px;}
+#ver{position:absolute;top:2px;right:90px;}
+#cmdbox{position:absolute;bottom:0px;right:-20px;width:40px;height:15px;background-image:url(/cow/grade_blue.jpg);background-repeat:repeat-x;}
+#cmdbox{opacity:.9;MozOpacity:.9;KhtmlOpacity:.50;filter:alpha(opacity=50);overflow:hidden; }
+#cmdlist{margin:5px;opacity:.99;}
+#nudge{position:relative;left:25px;}
+
+h2{margin:0;}
+.writtenby{font-size:75%;margin-bottom:6px;}
+
+.fakebutton {font-size:75%;cursor:pointer;text-decoration:none;color:black;background-image:url(/cow/input_bg.jpg);background-repeat:no-repeat;background-positiont:top left;border-top:1px solid white;border-left:1px solid white;border-right:1px solid #6F6F6F;border-bottom:1px solid #6F6F6F;margin:2px;}
+.fakebutton:link {text-decoration:none;color:black;}
+.fakebutton:visited {text-decoration:none;color:black;}
+.fakebutton:hover {text-decoration:none;color:black;background:silver;border-top:1px solid #6F6F6F;border-left:1px solid #6F6F6F;border-right:1px solid white;border-bottom:1px solid white;}
+
+.mis{border-bottom:1px dashed red;}
+.mis:link{color:black;}
+.mis:visited{color:black;}
+.mis:hover{color:white;}
+

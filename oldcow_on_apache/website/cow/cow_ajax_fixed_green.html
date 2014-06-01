@@ -1,0 +1,453 @@
+<html>
+<head>
+<title>cow_ajax_fixed</title>
+
+<script type="text/javascript"><!--
+
+var t0 = setInterval("ajaxRead('\/cgi-bin\/$cow?p=$p&m=msgr&f=2')",3000); // wait a sec before initialising..
+var t1 = setTimeout("ajaxRead('\/cgi-bin\/$cow?p=$p&m=input&f=2&c=look')",300); // wait a sec before initialising..
+var t2 = setInterval("updisp()",200);
+
+var error_count =0;	// how many http errors sofar..
+var cmdbox_state=0; // init to hidden..
+var lcm_state   =0; // init to hidden..
+var ucmd_sent   =0; // has a user command been sent and we are awaiting a reply..
+var otitle      ='';// the last title..
+var winH        =0; // global to hold window width/height
+var winW        =0; // global to hold window width/height
+var ping_default = "( <span style='color:orange'>(</span> <span style='color:yellow'>o</span> <span style='color:orange'>)</span> )";
+var pingcount    =0; // the first ping to work with (its actualy 1 as we incr this before starting to ping)
+var histMax     =60;// how many messages are store inthe select list that slowly pumps to the browser
+var done=new Array();
+var mcount      = 0;
+
+function ajaxRead(file,ucmd){
+  var xmlObj = null;
+  if(window.XMLHttpRequest){
+      xmlObj = new XMLHttpRequest();
+  } else if(window.ActiveXObject){
+      xmlObj = new ActiveXObject("Microsoft.XMLHTTP");
+  } else {
+      return;
+  }
+	var xmlo = ucmd;
+	if(ucmd==1){
+    if(error_count>0){
+  		window.document.title=' -- please be patient --';
+		}else{
+			//otitle=window.document.title;
+			//window.document.title='..thinking..';
+		}
+		ucmd_sent=1;
+	}
+  xmlObj.onreadystatechange = function(){
+		if(xmlObj.readyState == 4){
+			if (xmlObj.status == 200) {	 // only if "OK"
+				error_count=0;
+				if((xmlo==1)&&(ucmd_sent==1)){
+					ucmd_sent==0;
+					//window.document.title=otitle;
+				}
+				var bits = xmlObj.responseText.split("~~~"); // split ~~~msgs~~fopp says hi~~~locs:You are in..
+        //document.getElementById('msgs').innerHTML+=xmlObj.responseText;
+        for (var i=0; i < bits.length; i++) {
+					var bit = bits[i].split("~~",2);
+					if(bit.length > 0){
+						if((bit[0].length>1)&&(bit[0].length<7)){
+							if(bit[0]=='msgs'){
+								newmsg=1;
+								if(document.getElementById('notifyme').checked==true && ((window.screenX<0)||(window.screenLeft<0))){ self.focus();}	// pop it up only if minimised
+								var lines = bit[1].split("<br>") // split msg into its lines and add to msgs one by one..
+								for (var lc=0; lc < lines.length; lc++) {
+									if(lines[lc].length>0){
+									  var line = lines[lc].split('|',2); // split 123|wolis says hi
+										var pingpos=line[1].indexOf('_ping'); // find out where 'ping' is in ping 10,320
+										if(pingpos>0){
+											var pingxy = line[1].substr((pingpos+6)); // get the x,y from the string..
+											setPing(pingxy);                          // do a ping at that position..
+											if(pingpos>219){
+												var pmsg = line[1].substr(0,pingpos-1);     // strip text off up to the ping..
+									    	addlist(line[0],pmsg+"'");
+											}
+										}else{
+									    addlist(line[0],line[1]);
+										}
+									}
+								}
+							}else if(bit[0]=='lcmds'){
+								var lines = bit[1].split("|") // split cmds into strings..
+								for (var lc=0; lc < lines.length; lc++) {
+									if(lines[lc].length>0){
+									  addlcmd(lines[lc],lines[lc]);
+									}
+								}
+
+							}else if(bit[0]=='nums'){
+								if(newmsg==1){
+  								window.document.title='!.'+bit[1];
+	  							setTimeout("window.document.title='.!"+bit[1]+"'",100);
+	  							setTimeout("window.document.title='!."+bit[1]+"'",200);
+	  							setTimeout("window.document.title='.!"+bit[1]+"'",300);
+	  							setTimeout("window.document.title='!."+bit[1]+"'",400);
+	  							setTimeout("window.document.title='.!"+bit[1]+"'",500);
+	  							setTimeout("window.document.title='!."+bit[1]+"'",600);
+	  							setTimeout("window.document.title='.!"+bit[1]+"'",700);
+	  							setTimeout("window.document.title='!."+bit[1]+"'",800);
+	  							setTimeout("window.document.title='.."+bit[1]+"'",900);
+									newmsg = 0;
+								}else{
+								  window.document.title = '..'+bit[1];
+								}
+							}else if(bit[0]=='id'){
+								 var flds = bit[1].split('='); // split ~~~id~~last_target=123
+								//alert(bit[1]+'['+flds[0]+']['+flds[1]+']');
+								if(flds[0]=='bannercolour'){
+									 //document.getElementById('info').style.background=flds[1];
+								 }else{
+									 if(document.getElementById(flds[0])){
+										 document.getElementById(flds[0]).value = flds[1];
+									 }else{
+										document.title='cant find ['+flds[0]+'] to put ['+flds[1]+'] in';
+									 }
+								 }
+							}else if(bit[0]=='nwin'){
+								newwin = window.open(bit[1]);
+								if(newwin==null){alert('The editor for this interface opens in a popup window but you appear be blocking popup windows in your browser');}
+							}else if(bit[1].length>1){
+								 //document.getElementById('msgs').innerHTML += bit[0]+',';	// replace contents..
+								 if(bit[0]=='view'){ bit[0]='locs';} // tranofrm draggy view into old logs vew..
+								 document.getElementById(bit[0]).innerHTML = bit[1];	// replace contents..
+							}
+						}
+
+					}else{
+						document.getElementById('error').innerHTML = bit[0];	// write out the error msg..
+					}
+				}
+			}else{
+				error_count++;
+				if(error_count>10){
+				  window.document.title="There was a problem accessing cow: " + xmlObj.status;
+					error_count=0;
+				}else{
+					window.document.title="network delay "+error_count+" "+file;
+				}
+
+			}
+		}
+	}
+	xmlObj.open ('POST', file, true);
+	xmlObj.send ('');
+}
+function setPing(t){ // position the ping layer at the XY position and set timer to hide it again..
+	if(pingcount++>8){pingcount=1;}	// increment the ping count.. one of the 9 possible pings allowd on the screen at one time..
+	var ping = document.getElementById('ping'+pingcount);
+	var pxy = t.split(',');
+	var phtml = ping_default;                   // setup the default ping if nothing is specified..
+	var px,py = 0;
+	var pimg = '';
+	var ptime = 0;                              // no time specified so use clunky timer flashing..
+	setOpac('ping'+pingcount,85);
+	if(isNaN(parseInt(pxy[1]))){ // second digit is text so assume 87,ring1,5
+		var tobj = document.getElementById('a'+pxy[0]);
+		var pimg = pxy[1];
+		if(tobj){
+			var poff_left=20;
+			var poff_top =15;
+			var lpos = document.getElementById('locs');
+			if(pimg.indexOf('ring')>-1){
+			  poff_left=-25;
+				poff_top=-40;
+			}else if(pimg.indexOf('bang')>-1){
+			  poff_left=-50;
+				poff_top=-40;
+			}
+			px = parseInt(tobj.offsetLeft)+poff_left;
+			py  = parseInt(tobj.offsetTop)+poff_top;
+  		ptime = parseInt(pxy[2]);
+		}
+	}else{ // second digit is a number so assume x,y
+		// divide screen up into 10 x 10 units
+		getWindowDims();                                                // work out how big the window is..
+		px = parseInt(winW/10)*parseInt(pxy[0])+parseInt(winW/100);
+		py = parseInt(winH/10)*parseInt(pxy[1])+parseInt(winW/100);
+		if(pxy[2]){
+			if(pxy[2].indexOf(' ')>0){
+				phtml = pxy[2];                                               // they passed a string of text..
+			}else{
+				pimg = pxy[2];
+			}
+		}
+		if(pxy[3]){
+ 			ptime = parseInt(pxy[3]);
+		}
+	}
+
+	if(pimg!=''){ phtml = '<img src=/cow/img/ping/'+pimg+'.gif>';	}	 // use image passed..
+	ping.innerHTML =phtml;                                            // give ping some content - img or text or default..
+	ping.style.position='absolute';
+	ping.style.left=px;																							 // position the ping on the screen..
+	ping.style.top =py;
+	if(ptime>0){ // a duration as specified..
+		if(ptime > 10){ptime = 10;}
+		setTimeout("document.getElementById('ping"+pingcount+"').style.top=-1000",parseInt(ptime*1000)); // hide it after set time..
+	}else{
+		// no params so use boring standard ping..
+		setTimeout("document.getElementById('ping"+pingcount+"').style.top=-1000",500); // hide it after some time..
+		setTimeout("document.getElementById('ping"+pingcount+"').style.top="+py,1000); // show it after some time..
+		setTimeout("document.getElementById('ping"+pingcount+"').style.top=-1000",1500); // hide it after some time..
+		setTimeout("document.getElementById('ping"+pingcount+"').style.top="+py,2000); // show it after some time..
+		setTimeout("document.getElementById('ping"+pingcount+"').style.top=-1000",2500); // hide it after some time..
+	}
+}
+
+function addlist(n,t) {
+  if(document.getElementById('mlist')){
+    with(document.getElementById('mlist')){
+  		var l=length++;
+  		options[l].value=n;
+  		options[l].text=t;
+			if(l>histMax){
+				options[0].autocomplete='off';
+				//options[0]=null;
+				remove(0);
+			}
+
+  	}
+  }
+}
+function addlcmd(n,t) {
+  with(document.getElementById('lcmd')){
+		if(length>16){
+			for(var i=0;i<length-1;i++){
+				var c = i+1;
+				options[i].value=options[c].value;
+				options[i].text=options[c].text;
+			}
+			options[i].value=n;
+			options[i].text=t;
+		}else{
+  		var l=length++;
+			options[l].value=n;
+			options[l].text=t;
+		}
+  }
+}
+
+function updateObj(obj, data){
+ document.getElementById(obj).firstChild.data = data;
+}
+
+function updisp(){
+	//document.getElementById('msgsHolder').style.left = parseInt(document.getElementById('msgsHolder').style.left);
+	if(document.getElementById('mlist')){
+    with(document.getElementById('mlist')){
+  		var p = selectedIndex+1;
+  		if(p<1){
+  			selectedIndex=-1;
+  			p=0;
+  		}
+  		if(p < length){
+  			selectedIndex++;
+  			if(done[options[p].value] > 0){
+  			}else{
+  				with(document.getElementById('msgs')){
+  				  if(mcount++ >= histMax){
+							tmp = innerHTML.toUpperCase();
+						  cutAt=tmp.indexOf("<BR>")+4;
+						  innerHTML = innerHTML.substr(cutAt);
+						}
+  				  innerHTML += options[p].text+"<BR>";
+  				  scrollTop=scrollHeight;
+  				}
+				}
+  			done[options[p].value]=1;
+				done.splice(0,options[p].value-histMax);
+
+  		}
+  	}
+  }
+}
+
+
+
+function showcmdbox() { // moves the cmdbox into view..
+  with(document.getElementById('cmdbox')){
+		if (cmdbox_state==1){ // move back..
+	  	style.bottom=0;
+			style.right=-20;
+	  	style.height=15;
+			cmdbox_state=0;
+      document.getElementById('cmdbutton').innerHTML="-^-";
+    }else{					 // move out..
+	  	style.bottom=-10;
+	  	style.height=145;
+			style.right=0;
+			cmdbox_state=1;
+      document.getElementById('cmdbutton').innerHTML="-v-";
+		}
+	}
+}
+
+function showlcmbox() { // moves the lcmbox into view..
+  with(document.getElementById('lcm')){
+		if (lcm_state==1){ // move back..
+	  	style.bottom=0;
+			style.left=-80;
+	  	style.height=15;
+			lcm_state=0;
+      document.getElementById('lcmbutton').innerHTML="-^-";
+    }else{					 // move out..
+	  	style.bottom=0;
+			style.left=0;
+	  	style.height=235;
+			lcm_state=1;
+      document.getElementById('lcmbutton').innerHTML="hide last cmds";
+		}
+	}
+}
+
+function clickcmd(cmd){ // populates the users cmdbox with this cmd and submits it..
+	document.getElementById('c').value=cmd;
+	usercmd();
+}
+
+
+function usercmd(mm){
+	var url = '\/cgi-bin\/$cow?f=2';
+	with(document){
+		url+='&p='+getElementById('p').value;
+		url+='&m='+getElementById('m').value;
+		url+='&d='+getElementById('d').value;
+		url+='&c='+escape(getElementById('c').value);
+		url+='&t='+getElementById('t').value;
+		url+='&y='+escape(getElementById('y').value);
+		url+='&s='+getElementById('s').value;
+		if(getElementById('c').value!=''){
+  		getElementById('c').focus();
+		}else{
+  		getElementById('y').focus();
+		}
+		getElementById('c').value='';
+		getElementById('y').value='';
+	}
+  ajaxRead(url,1);
+}
+
+function getWindowDims(){
+	if(window.Event){
+		winW = window.innerWidth;
+		winH = window.innerHeight;
+	}else{
+		if(document.documentElement.clientWidth){
+			winW = document.documentElement.clientWidth;
+			winH = document.documentElement.clientHeight;
+		}else{
+			if(document.body){
+				winW = document.body.clientWidth;
+				winH = document.body.clientHeight;
+			}else{
+			  winW=800;
+				winH=600;
+			}
+		}
+	}
+	//document.title = 'win:'+winW+'x'+winH;
+}
+
+if(window.Event){
+  document.captureEvents(Event.KEYDOWN); document.onkeydown = setkey;
+}else{
+  document.onkeydown = function(){
+   return setkey(event);
+  }
+}
+
+function setkey(event){
+	if((event.which==13)||(event.keyCode==13)){
+		usercmd();
+	}
+}
+
+function setOpac(id,opacity) {  //change the opacity for different browsers
+  var object = document.getElementById(id).style;
+  object.opacity = (opacity / 100);
+  object.MozOpacity = (opacity / 100);
+  object.KhtmlOpacity = (opacity / 100);
+  object.filter = "alpha(opacity=" + opacity + ")";
+}
+
+//--></script>
+<link rel='stylesheet' type='text/css' href='/cow/cow_green.css'>
+<style>
+#ping{position:absolute;top:-1000;font:150% tahoma bold;color:tomato;z-index:9999;}
+</style>
+</head>
+<body bgcolor=103050>
+ <!--
+ <a href=# onClick="ajaxRead('\/cgi-bin\/cow.pl?p=oNqga&m=input&c=think')">Think</a>
+ <a href=# onClick="ajaxRead('\/cgi-bin\/cow.pl?p=oNqga&m=msgr&f=2')">msgr</a>
+ <a href=# onClick="addMsg('this is a test')">add</a>
+ -->
+ <div id="info" class="bgr">
+ 	 <div id="banner"></div>
+	 <span id="ver" class="nml"></span>
+	 <span id="cmt"></span>
+	 <div id="users"></div>
+
+ </div>
+ <div id="msgs"></div>
+ <div id="locs">almost ready..</div>
+ <div id="uinput">
+
+	<form method=POST name=input_form class="form" id=input_form onSubmit="usercmd('input'); return false;">
+		<table width='100%' cellpadding='0' cellspacing='0' border=0><tr>
+		 <td width=40% valign=top><span class=sml>&nbsp;Cmd:</span><input type=text name=c id=c size=40 class=inp style='WIDTH:85%' title='Type a command then press [Enter]. Or click on the quick commands below'></td>
+		 <td width=40% valign=top><span class=sml>&nbsp;Say:</span><input type=text name=say id=y size=40 class=inp style='WIDTH:85%' title='Type something you want to say then press [Enter].'></td><td width=5%>
+		 <td width=10% valign=top><input type="checkbox" id="notifyme" title="Tick this to be notified when activity happens in cow (pops cow window open)"><input type=button value=ok class=btn name=ok onClick="usercmd('input')" style='WIDTH:70%' title='Click this to perform your typed command or to say something'>
+		 <!--
+		 &nbsp;<a href='cow.pl?f=1&c=look&l=7265&k=look. map' target=_blank class=sml title='copy this URL to email your last command to a friend'>!</a>
+		 -->
+		</td></tr></table>
+		<input type=hidden name=p id=p value=$p>
+		<input type=hidden name=m id=m value=input>
+		<input type=hidden name=a id=a value=87>
+		<input type=hidden name=t id=t value='' size=1>
+		<input type=hidden name=f id=f value=2>
+		<input type=hidden name=d id=d value=>
+		<input type=hidden name=s id=s value=$s>
+		<input type=hidden name=fld id=fld value=>
+	</td></tr></table></form>
+   <div id="nudge"></div>
+ </div>
+ <div id="error"></div>
+ <div id="rep">
+  <select name="mlist" id="mlist" multiple></select>
+ </div>
+ <div id="lcm"><a href=# id="lcmbutton" onMouseover="showlcmbox()" class="cmd">-^-</a>
+  <select name="lcmd" id="lcmd" class="sml_list" onClick="document.getElementById('c').value=document.getElementById('lcmd').value;" OnDblClick="document.getElementById('c').value=document.getElementById('lcmd').value;showlcmbox();usercmd('input');" multiple title='click to retype a previous command, DoubelClick to run it'></select>
+ </div>
+ <div id="cmdbox"><a href=# id="cmdbutton" onMouseover="showcmdbox()" class="cmd">-^-</a>
+	<div id="cmdlist">
+   <a href=# onClick="clickcmd('look')" class=cmd>look</a>
+	 <br><a href=# onClick="clickcmd('list')" class=cmd>list</a>
+	 <br><a href=# onClick="clickcmd('inv')" class=cmd>inv</a>
+	 <br><a href=# onClick="clickcmd('map')" class=cmd>map</a>
+	 <br><a href=# onClick="clickcmd('exit')" class=cmd>exit</a>
+	 <br><a href=# onClick="clickcmd('shout')" class=cmd>shout</a>
+	 <br><a href=# onClick="clickcmd('start')" class=cmd>start</a>
+	 <br><a href=# onClick="clickcmd('logoff')" class=cmd>logoff</a>
+ 	</div>
+ </div>
+ <div id="ping1"></div>
+ <div id="ping2"></div>
+ <div id="ping3"></div>
+ <div id="ping4"></div>
+ <div id="ping5"></div>
+ <div id="ping6"></div>
+ <div id="ping7"></div>
+ <div id="ping8"></div>
+ <div id="ping9"></div>
+
+</body>
+</html>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" 
+  standalone="yes"?>
+<response>
+  <method>checkName</method>
+  <result>1</result>
+	<oldcode>
+
+
+var req;
+
+function loadXMLDoc(url)
+{
+    // branch for native XMLHttpRequest object
+    if (window.XMLHttpRequest) {
+        req = new XMLHttpRequest();
+        req.onreadystatechange = processReqChange;
+        req.open("GET", url, true);
+        req.send('');
+    // branch for IE/Windows ActiveX version
+    } else if (window.ActiveXObject) {
+        req = new ActiveXObject("Microsoft.XMLHTTP");
+        if (req) {
+            req.onreadystatechange = processReqChange;
+            req.open("GET", url, true);
+            req.send();
+        }
+    }
+}
+
+function processReqChange()
+{
+    // only if req shows "complete"
+    if(!req) return;
+    if (req.readyState == 4) {
+        // only if "OK"
+        if (req.status == 200) {
+            // ...processing statements go here...
+						document.getElementById('locs').innerHTML += req.responseText+'<br>';
+						//return req.responseText;
+						//alert('ok '+req.responseXML.getElementsByTagName('method')[0].firstChild.data);
+						//alert(req.responseText);
+						document.getElementById('locs').scrollBottom;
+        } else {
+            alert("There was a problem retrieving the XML data:\n" + req.status);
+        }
+    }
+}
+
+function addMsg(txt){
+document.getElementById('msgs').innerHTML += txt+"<br>x";
+document.getElementById('msgs').scrollBottom;
+
+}
+
+	</oldcode>
+</response>

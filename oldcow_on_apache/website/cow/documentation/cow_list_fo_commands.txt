@@ -1,0 +1,71 @@
+
+COW commands:
+if  {condition} then {true_sub_name} else {false_sub_name};
+get {$target | $target,to,$text | $text,'to',$target | $target,$ret,$second | $pretext,$target} in {$object};
+msg {$loc},{$actor},{$target},{$second},"{trigger_cmd_name}","{msg_text}";
+say "{trigger_cmd_name}","{msg_text}";
+set {thing} to {thing};
+var {$variable} to {thing};
+new {full_object_description_text};  // sets $target and $new_loc and $old_target
+find {full_object_description_text}{,method}; // sets $found_id and $found_loc
+foreach in {$loc} do {sub_name};     // fore each object in this location do the named sub 
+look {$loc},{method};                // populates the locaiton and sys_msg strings with current location based on method
+goto {sub_name};                     // continue execution from this named sub
+mode {mode_name};
+call {user_cmd_string};
+copy {thing};                        // makes a duplicate copy of an object
+touch {object};                      // updates the objects upd_time so it wont be deleted.. all GET objects are touched so this probably redundant.
+
+
+Definitions:
+{thing} = {obj_field | var | "string"}
+{condition} =  {thing} {like | eq | ne | > | < | != } {thing}
+{obj_field} = {{resolves_to_obj_id}'s }field}  eg: $actor's host's link's host's qty
+{msg_text}  = "[$actor] did $action with params of $cmd_text" If you enclose a variable in [] then it will be translated into then name of the object represented by the value of the variable
+{trigger_cmd_name} =  a simple word used to find objects which react to the action performed eg get and eat should both used the trigger_word 'get'
+
+find method = 'random' = pick a random object in this location..
+look method = 'list|full|inv' 
+If var ends with [1] then only return the first word of string: $text = 'to the fish' $text[1] returns 'to'
+
+new  sets vars:    $target,$new_loc
+find sets vars:    $found_id,$found_loc;
+foreach sets vars: $for_id,$for_link,$for_class,$for_name
+look sets vars:    $current_loc or $sys_msg with description of the obj $loc, method is 'inv','list','examine' or blank for default location description
+
+If you want to change the default click command do this:
+var $click_cmd to 'watch';
+var $desc_intro to 'Click on an object to watch:<br>';
+look $loc,list
+
+
+-- sample (put) command in an objects 'extra' --
+get $target,$rel,$second in $loc;
+if $target > 0 then trysecond else fail;
+##trysecond:
+if $second > 0 then continue else fail;
+##continue:
+set $target's host to $second;
+msg $loc,$actor,$target,$second,'put',"$actor put $target $rel $second";
+##fail:
+msg $loc,$actor,$target,$second,'putfail',"$actor could not put $target $rel $second";
+
+Reacting objects:
+An object can react to an action around it or a generic 'tick' of the cow clock (each time someone does a post)
+to make an obejct react you need to edit its code and make an element with the action message name eg:
+
+##leaves:runsub saybye;
+##saybye:
+say 'say',"[$actor] waves goodbye";
+
+each time an object adds a msg it is given a common action name eg when you leave the common msg is 'leaves' eg say 'leaves',"[$actor] teleports away"
+
+
+__________________________________________________________________________________________
+
+3   command   get   get $target; if $target > 0 then moveobj else fail ##moveobj: set $target's loc to $actor; msg $loc,$actor,$target,$second,'get',"picked up $target"; ##fail: msg $loc,$actor,$target,$second,'getfailed',"$actor could not get $target_name";
+4   command   make  get $text; new $text; say 'make',"$actor created $text"; look $loc;
+28  command   sing  if '$cmd_text' eq '' then sub1 else sub2; ##sub1: say 'caughs',"loudly to get some attention"; say 'sings',"- How much is that doggy in the window?"; say 'sings',"- The one with the waggily tail."; ##sub2: if '$cmd_text' eq 'a song' then sub3 else sub4; ##sub3: say 'caughs',"loudly to get some attention"; say 'sings'," - When I wish upon a star.."; say 'sings',"singing but noone pays any attention"; ##sub4: say 'caughs',"loudly to get some attention"; say 'sings'," - $cmd_text";
+35  command   change  get $thing1,$rel,$thing2; if $rel eq 'to' then update else fail; ##update: set $thing1 to $thing2; say 'change',"$actor changed $thing1 to $thing2"; ##fail: say 'changefail',"$actor could not change $target";
+33  command   look  look $loc; say 'look',"$actor looks around";
+31  command   put   get $target,$rel,$second; if $target > 0 then trysecond else fail; ##trysecond: if $second > 0 then continue else fail; ##continue: set $target's host to $second; msg $loc,$actor,$target,$second,'put',"$actor put $target $rel $second"; ##fail: msg $loc,$actor,$target,$second,'putfail',"$actor could not put $target $rel $second";

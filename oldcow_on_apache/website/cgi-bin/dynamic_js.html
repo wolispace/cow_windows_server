@@ -1,0 +1,67 @@
+<html>
+ <head>
+ <script>
+  var jsCount = 1;
+  function jsLoader(jsCode){
+   // loads a block of JS in to the main page..
+
+
+   var js = document.createElement("script");
+   js.setAttribute("language", "Javascript");
+   js.setAttribute("style", "text/javascript");
+   js.innerHTML = jsCode;
+   js.defer = true;
+
+   // document.getElementsByTagName('body')[0].appendChild = '<b>hmm</b>';
+   document.body.appendChild(js);
+
+  }
+
+  function loadJs()
+  {
+    var rows = document.getElementsByTagName( 'script' );
+    var rlen = rows.length;
+    //alert('jscount='+jsCount);
+    for( var i = jsCount; i < rlen; i++ ) {
+      row = rows[i];
+      jsCount++;
+      tScript = row.innerHTML;
+      tScript = tScript.replace(/<br>/g,"\n");
+      tScript = tScript.replace(/''/g,'"');
+      tScript = tScript.replace(/aaa/g,'bbb');
+
+      alert(i+' '+tScript);
+      jsLoader(tScript);
+    }
+  }
+
+
+  function getElementsType( strTagName )
+  {
+    var rows = document.getElementsByTagName( strTagName );
+    for( var i = 1, row; row = rows[i]; i++ ) {
+      alert(row.textContent);
+      jsLoader(row.textContent);
+    }
+  }
+
+
+ </script>
+ </head>
+ <body>
+  <script class='jsScript'>
+   function aaa(){
+    alert('hoho');
+   }
+  </script>
+
+  <textarea id='thisJs'>
+  function ccc(){ alert('ccc'); }
+  </textarea>
+  <a href=# onClick="jsLoader(document.getElementById('thisJs').value);">Add ccc</a>,
+  <a href=# onClick="loadJs()">load scripts</a>,
+  <a href=# onClick="aaa()">aaa</a>
+  <a href=# onClick="bbb()">bbb</a>
+  <a href=# onClick="ccc()">ccc</a>
+ </body>
+</html>

@@ -1,0 +1,49 @@
+
+<script>
+var timer1; // holds ID of the timer..
+var timerTick; // how regularly should we update - passed from onClick..
+function timerToggle(timerTicker){ // toggle the timer on and off..
+  timerTick = timerTicker;
+  with(document.getElementById('timerButton')){
+    if(value==document.getElementById('timerButton2').value){ 
+     clearTimeout(timer1); // stop the timer..
+     value=document.getElementById('timerButton1').value; // change button text..
+    }else{ 
+     timer1 = setTimeout('timerIncr()', timerTick); // set the timer for the first min..
+     value=document.getElementById('timerButton2').value;
+     document.getElementById('timerMins').innerHTML=Math.round(document.getElementById('timerHours').value * 60);
+    }
+  }
+  timerUpdate(); // update the display..
+}
+function timerIncr() { // add another minute..
+  with(document.getElementById('timerSecs')){
+    if(innerHTML++ > 58){ // if we have gone over into the next min..
+      document.getElementById('timerMins').innerHTML++; // add another min..
+      innerHTML=0; // reset seconds..
+    }
+  }
+  timer1 = setTimeout('timerIncr()', timerTick); // set the timer for another min..
+  timerUpdate();
+}
+function timerUpdate() { // update the display of decimal time..
+  document.getElementById('timerHours').value = Math.round(((document.getElementById('timerMins').innerHTML)/60)*100)/100;
+  with(document.getElementById('timerAnim')){
+    if(innerHTML==document.getElementById('timerAnim1').value){
+      innerHTML=document.getElementById('timerAnim2').value;
+    }else{
+      innerHTML=document.getElementById('timerAnim1').value;
+    }
+  }    
+}
+</script>
+<input type='submit' id='timerButton' value='start' onClick='timerToggle(1000)'>
+<input type='text' size=2 id='timerHours' title='Decimal hours'>hrs   
+(<span id='timerMins'></span> mins) 
+<span id='timerSecs' style='display:none'></span> <span id='timerAnim'></span>
+<input type='hidden' id='timerAnim1' value=':'> 
+<input type='hidden' id='timerAnim2' value='.'> 
+<input type='hidden' id='timerButton1' value='start'> 
+<input type='hidden' id='timerButton2' value='stop'> 
+
+ 

@@ -1,0 +1,99 @@
+@echo off
+set path=c\windows;c:\windows\command
+
+echo HACKSAVE.BAT v1.1 written by Wallace McGee (c) Nov 2002
+echo For making backups and restoring nethack save files
+:: mod v1.1 20030307 stop rolling backups if having to restore dead file, added resore ability with confirmation
+echo _______________________________________________________
+echo 1. Create a shortcut to hacksave.bat
+echo 2. Rename it to 'Start Nethack for {your name}
+echo 3. Right-click -> Properties -> Program
+echo 4. Add your Nethack name to the end of the Cmd Line
+echo 5. Also add your Windows logon name if logged on
+echo.
+echo e.g c:\nethack\hacksave.bat wam wm
+echo.
+echo Your last saved game will be backed up each time you start your shortcut.  
+echo.
+echo If you die, your last saved game will be restored when you start your shortcut.
+echo.
+echo NOTE: If you logon to Windows as a different user you will need a new shortcut reflecting this logon name!
+echo.
+echo RESTORE an old game by adding it number eg c:\nethack\hacksave.bat wam wm 04
+echo.
+echo I will now try to manipulate a few files then start nethack...
+:: default user name..
+set u=user
+
+:: default logon name..
+set l=NetHack
+
+:: saved games folder..
+set f=saved\
+
+:: grab passed user name..
+if NOT %1!==! SET u=%1
+
+:: grab passed logon name..
+if NOT %2!==! SET l=%2
+
+:: make base file name..
+set n=%l%-%u%.NetHack-saved-game
+
+:: if a last save file exists then roll backups..
+if exist "%f%%n%" goto ROLL
+
+:: restore last file because this user was killed..
+if NOT exist "%f%%n%" copy "%f%%n%.09" "%f%%n%" 
+
+:: dont bother rolling backups..
+goto CONTINUE
+
+:ROLL
+:: backup previous files..
+if exist "%f%%n%.01" del "%f%%n%.01" 
+if exist "%f%%n%.02" ren "%f%%n%.02" "%n%.01" 
+if exist "%f%%n%.03" ren "%f%%n%.03" "%n%.02" 
+if exist "%f%%n%.04" ren "%f%%n%.04" "%n%.03" 
+if exist "%f%%n%.05" ren "%f%%n%.05" "%n%.04" 
+if exist "%f%%n%.06" ren "%f%%n%.06" "%n%.05" 
+if exist "%f%%n%.07" ren "%f%%n%.07" "%n%.06" 
+if exist "%f%%n%.08" ren "%f%%n%.08" "%n%.07" 
+if exist "%f%%n%.09" ren "%f%%n%.09" "%n%.08" 
+if exist "%f%%n%" copy "%f%%n%" "%f%%n%.09" 
+
+:CONTINUE
+
+:: make sure we have a backup of user-specific config..
+if not exist defaults_%u%.bak copy defaults.nh defaults_%u%.bak
+
+:: change to user-specific default.nh file e.g (defaults_wm.nh)..
+if exist defaults_%u%.nh copy defaults_%u%.nh defaults.nh
+
+
+:: is there a third param, being the saved game number to restore from..
+if %3!==! goto START
+
+:: prompt user to confirm restore of a numbered game
+echo.
+echo You are about to restore from game number %3
+echo. 
+echo Press CTRL-C to stop this now or
+pause
+
+:: set numbered game as the current live game..
+if NOT exist "%f%%n%.%3" goto NORESTORE
+copy "%f%%n%.%3" "%f%%n%" 
+
+:START
+:: start the game..
+nethackw -u %u%
+
+goto END
+
+::NORESTORE
+echo You wanted to restore from "%f%%n%.%3" but that file does not exist!
+echo Choose a valid number from 01 to 09 next time.
+
+:END
+echo  ------- You can close this window now --------

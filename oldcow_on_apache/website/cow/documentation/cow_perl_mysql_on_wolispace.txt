@@ -1,0 +1,37 @@
+Cow On Wolispace
+----------------
+
+2003/07/25
+
+Database = MySQL
+Script = Perl and javaScript
+
+Minimum commands:
+obj_id = obj_find(location,decription,params)
+
+value = obj_get(obj_id,valuename,default)
+sucess= obj_set(obj_id,valuename,value)
+
+obj_id = obj_new(location,namedescrition)
+
+
+
+things we need to know about an object:
+obj_id
+namedescription = 'a small fluffy white cat called peter'
+qty = 1
+loc = 56 (a bed room)
+size= small
+looks = fluffy
+colour = white
+name = cat
+named = peter
+verb = sitting
+host = 23 (a chair)
+how = on
+age = 50
+material = animal
+link = 0 (not a doorway)
+facing = n (north)
+desc = 'it looks quite content'
+

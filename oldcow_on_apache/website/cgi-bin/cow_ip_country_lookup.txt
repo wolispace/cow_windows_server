@@ -1,0 +1,11 @@
+A x (256*256*256) + B x (256*256) + C x 256 + D
+
+
+select RemoteAddress as IP,
+( SUBSTRING_INDEX( RemoteAddress, '.', 1 ) * 16777216 +
+SUBSTRING_INDEX(SUBSTRING_INDEX( RemoteAddress, '.', 2 ),'.',-1) * 65536 +
+SUBSTRING_INDEX(SUBSTRING_INDEX( RemoteAddress, '.', -2 ),'.',1) * 256 +
+SUBSTRING_INDEX( RemoteAddress, '.', -1 )
+) AS IP2Num
+FROM log
+;

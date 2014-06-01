@@ -1,0 +1,1 @@
+D:\data\webtools\mysql\bin\mysql.exe -vvv < %1

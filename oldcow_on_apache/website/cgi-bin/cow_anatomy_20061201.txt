@@ -1,0 +1,83 @@
+
+
++------------+-----------------------+
+| Field      | Type                  |
++------------+-----------------------+
+| obj_id     | int(11) unsigned      |The unique ID for this object
+| loc        | int(11) unsigned      |The obj_id of where this object is located
+| owner      | int(11) unsigned      |The obj_id of the object, usually a player, which created this object
+| link       | int(11) unsigned      |The obj_id this object is linked to as a doorway/portal
+| linkhow    | int(11) unsigned      |-unused- intention was for different kinds of doorways or links
+| host       | int(11) unsigned      |The obj_id of the object this object is put against eg a cat on a chair
+| hosthow    | varchar(100)          |Describes how this object is put against another eg <em>under</em> <em>on</em> etc..
+| qty        | int(11)               |How many of this object
+| qty_type   | varchar(100)          |-unused- 
+| class      | varchar(100)          |Class of object eg. cat, player, door (in sungular not plural form)
+| name       | varchar(100)          |The exact name of the object eg <em>Frank</em> for a cat called Frank
+| gender     | varchar(100)          |iether <b>him</b> or <b>her</b> default is it (no gender) 
+| skills     | text                  |Delimited list of skills  eg cooking|cleaning|fishing
+| skillvals  | text                  |Delimited list of specific values that go with a skill (complicated.. ask Thorn)
+| attribs    | text                  |-unused-
+| code       | text                  |The CowScript code for this object
+| lasttick   | datetime              |when this object last reacted to a tickhour so it wont perform another one within an hour
+| material   | varchar(100)          |Delmited list of materials that contain additional code this object treats as its own eg player|living|hungry|sleeping
+| matvals    | text                  |Delimited list of values asspciated with the materials eg: living=123|sleeping=Im fast asleep..
+| weight     | int(11) unsigned      |-unused-
+| strength   | int(11) unsigned      |-unused-
+| pwd        | varchar(100)          |The password for this object - if yours matches (or its blank) then you can manipulate it
+| email      | varchar(100)          |The email of the player who <em>is</em> this object - so we dont maintain a table of users
+| pid        | varchar(20)           |A unique value used for many things, one day it may replace obj_id 
+| upd_time   | timestamp(14)         |When this object was last touched (then intent was to delete old objects.. but I grew font of them and didnt want to delete them)
+| lmid       | int(11) unsigned      |last message read pointer for players to know what they have seen
+| fmid       | int(11) unsigned      |first message read pointer for similar reason
+| linkstate  | int(11) unsigned      |Is a doorway object open or closed  (1 or 0) or something else not thought of yet.. (could use link_type to make this mean different things)
+| info       | text                  |Anything written in an object, like a book, is stored in here
+| extra      | text                  |Extra text displayed at the end of a object <em>which is blinking</em> could be the extra text for a light bulb
+| pose       | varchar(100)          |text describle how the object is posed eg <em>sleeping</em> could be used for a cat: <em>a cat sleeping on the chair</em> some poses when combined with a hosthow stick the object to the host (wielded by, worn by, carried by..)
+| face       | varchar(100)          |A cardinal point allowing players to move using them eg. <em>north</em>
+| facehow    | varchar(100)          |How the object faces the cardinal point eg <em>facing</em> or <em>leading</em> : <em>leading north</em>
+| worth      | int(11) unsigned      |How much this object is worth
+| pclass     | varchar(100)          |Plural class which is auto-calculated eg cats, foxes, knives, kittens
+| add_date   | varchar(50)           |A nice printable strng of the date this object was added into cow
+| motion     | varchar(100)          |How this object moves when going through doorways.. can be list eg (strides, marches, staggers) and a ramdom one is used each time
+| colour     | varchar(100)          |The #FFFFFF colour ot the html colour word eg orange, dodgerblue, limegreen etc..
+| add_stamp  | varchar(50)           |When this object was added
+| x          | int(11) unsigned      |Co-ords of this object in its current location (starts off random, but is fixed once viewed
+| y          | int(11) unsigned      |
+| z          | int(11) unsigned      |
+| lochow     | varchar(50)           |Used to describ how players exist in relation to this location eg 'standing in', 'balancing on' the default is 'in'
+| slot1      | varchar(255)          |Three general purpose fields - created before I thught f pocket variables (which were thought of before thorns delimited string variables 
+| slot2      | varchar(255)          |
+| slot3      | varchar(255)          |
+| globalhost | int(11) unsigned      |-out of service- Used to position an object in relation to another when viewing the world map. Ajax interfaces dont have a means of viewing the world map at present
+| globalx    | int(11)               |world map positioning
+| globaly    | int(11)               |
+| globalz    | int(11)               |
+| globalimg  | varchar(255)          |image to use in world map view
+| browser    | varchar(255)          |A logged in players browser type
+| ip         | varchar(200)          |A logged in players IP address
+| imglook    | varchar(255)          |Image to use when displayed in a look
+| imglist    | varchar(255)          |Image to use when displayed in a list (message list or list of a room) acts like an icon
+| imgmap     | varchar(255)          |Image to use when displayed in a map
+| imgloc     | varchar(255)          |background image for a location when viewed in a map
+| lastcmds   | varchar(255)          |list of last commands for interfaces that cant handle this themselves
+| notes      | text                  |Users notes, only frames version makes use of this, ahve not built it niot ajax interfaces yet
+| mask       | varchar(255)          |Any text in here will block matching text - so if you dont like bob, put bob in here and everything from bob will be masked from your sight (like blocking a user - but works with any message)
+| creator    | int(11) unsigned      |obj_id of object that created this object
+| niceness   | int(11)               |Some value of how nice this object is 9realy should be politeness) .. can be negative for nasty	- starts at 0 (swearing reduces it, using please increases it
+| switch     | int(11) unsigned      |Is this object on for reacting or not.
+| keyid      | int(11) unsigned      |obj_id of a locking object - only it can be sued to unlock this object for viewing or travling thrugh if a doorway
+| keyloc     | int(11) unsigned      |obj_id of linked doorway this locked door will go to when unlocked
+| health     | double(11,2) unsigned |current amount of health
+| healthmax  | int(11) unsigned      |maximum amount of health
+| armour     | int(11) unsigned      |-unused-
+| mana       | int(11) unsigned      |current amount of mana
+| manamax    | int(11) unsigned      |maximum amount of health
+| wisdom     | int(11) unsigned      |-unused-
+| hunger     | int(11) unsigned      |-unused-
+| age        | int(11) unsigned      |-unused-
+| state      | varchar(255)          |-unused-
+| mood       | int(11)               |-unused-
+| clock      | double(11,2)          |-unused- intent is for psersonal time offsetsfrom CMT (Cow Mean Time) for players
+| counter    | int(11) unsigned      |generic counter specific to the object
++------------+-----------------------+

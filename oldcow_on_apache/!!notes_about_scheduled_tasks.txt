@@ -1,0 +1,6 @@
+!backup_from_b.bat     every 15mins (once a day > Advanced > repreat every 15 mins for 24 hrs)
+!backup_hourly.bat     
+!backup_daily.bat      
+!backup_weekly.bat
+!backup_monthly.bat
+!backup_yearly.bat

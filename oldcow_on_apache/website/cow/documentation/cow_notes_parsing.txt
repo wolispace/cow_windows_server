@@ -1,0 +1,48 @@
+[VERB] the|a|some [ADJECTIVE]* [OBJECT]? \
+[to|for|from|with INDIRECT-OBJECT]? [ADVERB]?
+
+"Create a small white mouse quickly."
+ [V]      [ADJ] [ADJ] [OBJ]  [ADV]
+"Give some tasty peanuts to the mouse."
+ [V]       [ADJ] [OBJ]        [I-OBJ]
+"Eat the mouse noisily."
+ [V]     [OBJ] [ADV]
+
+
+---------
+my @command = split /\s+/, $input;
+my $cmd_name = shift @command;
+complain("$cmd_name isn't a command\n") unless exists $dispatch_table{
++$cmd_name};
+$dispatch_table{$cmd_name}->(@command);
+
+# And the function called with handle "floober with sword"
+---------
+
+ [ subject , ]
+   verb
+ [ adverb ]
+ [ dobject | dobjectlist | "stringliteral" ]
+ [ preposition iobject ]
+ [ . | ? | ! ]
+
+The verb is the only requirement.
+
+Real subjects, dobjects and iobjects all follow the basic grammar:
+
+ [ article ]
+ [ adjectives ]
+   noun
+
+There are quite a few alternative grammars to the main sentence type, but the overall fields are fixed and once determined, all have the same meaning. For instance, it's okay to type the adverb before the verb. The adverb usually describes a different tradeoff but the same basic verb behavior (run quickly) vs (run quietly). I would recommend against supporting multiple adverbs, especially adverbs modifying adverbs (like 'very').
+
+The subject, if specified, must be first and followed by a comma. It's up to the subject to "consent" to the request; they can decide for themselves whether or not to allow the command (floyd, give me the circuit board).
+
+The dobject is either singular, or a list of objects, or a string literal. If a list of objects, the word "and" and/or a comma must separate items. Special pseudo-articles such as qw(all some the my) can help a search strategy for multiple objects within a given search domain (put all goo in the box). Lastly, a string literal is used for things like dialogue (say "hello" to floyd). An alternative sentence grammar would assume that if the sentence consists only of a string literal, then the verb is either 'say', 'exclaim' or 'ask' depending on any final punctuation.
+
+The overall effect of multiple dobjects is a simple iteration, with the sentence applied once identically to each dobject. Throw exceptions to interrupt the processing if desired.
+
+Iobjects are always singular prepositional targets. An alternative sentence syntax allows iobject to precede dobject, but it really swaps them and supplies a default preposition (give floyd the broom) becomes (give the broom to floyd). This is detected while parsing by noting the missing comma/'and' between two noun phrases.
+
+There's a lot more to my scheme; as I said I have developed the code but it's not something I can freely share in detail at this time. You're welcome to e-mail for other ideas, though.
+

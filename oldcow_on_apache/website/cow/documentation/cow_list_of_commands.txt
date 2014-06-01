@@ -1,0 +1,322 @@
+<b>Introduction to COWScript</b>
+COWScript consists of one or more blocks (sometimes called subs) of named code containing one or more commands
+eg:<i>
+   ##examit:
+   exam $target;
+   if $target's loc eq $actor's loc then sayso else end;
+</i>
+<b>About blocks or subs</b>
+A block starts with a double hash '##' and ends at the start of the next double hash or the end of the code.
+
+The name of the block of code immediatly follows the double hash and ends with the first colon ':'  In the above example the code block is called 'examit'
+
+You can name your blocks almost anything you like, just avoid spaces and punctuation and 'key words' used for triggering reactions. If an object contains a block name that matches a 'key word' used in a message, the object will perform that block of code (see About reacting objects below)
+
+Blocks of code are named so you can make logical jumps from one block to another. 
+
+When you use IF to logically choose one block or another, any code following the IF (up the the next block) will be executed after the called block.
+
+<b>About commands</b>
+Each command within a block of code starts with a 'command word' and ends with the first semi-colon ';'
+
+The above example has two commands 'exam' and 'if'.
+
+The parameters of each command are selerated initially by a space however additional parameters may be seperated by spaces,commas or keywords as defined for each command.
+
+In the above example 'if_{operand}_{operator}_{operand}_then_{sucess}_else_{fail};' has 7 params seperated by spaces.
+
+White space and new lines around commands are ignore and can be used to make the code block more legible. The above example could have been written as:
+   ##examit:exam $target;if $target's loc eq $actor's loc then sayso else end;
+
+<b>COWscript commands in brief</b>
+if  {condition} then {true_sub_name} else {false_sub_name};
+get {$target | $target,to,$text | $text,'to',$target | $target,$ret,$second | $pretext,$target} in {$object};
+msg {$loc},{$actor},{$target},{$second},"{trigger_cmd_name}","{msg_text}";
+say "{trigger_cmd_name}","{msg_text}";
+set {thing} to {thing};
+var {$variable} to {thing};
+new {full_object_description_text};  // sets $target and $new_loc and $old_target
+find {$thing},{$thing|random {random_options}};       // sets $found_id and $found_loc
+foreach in {$loc} do {sub_name};     // fore each object in this location do the named sub 
+look {$loc},{method},{where_clause};               // populates the locaiton and sys_msg strings with current location based on method
+runsub|gosub|goto {sub_name};                     // continue execution from this named sub
+case {thing} do {sub_name};          // do the sub based on the thing passed
+mode {mode_name(params)};
+call {user_cmd_string};         // executes a command as if the current object/actor typed it in.
+copy {thing};                        // makes a duplicate copy of an object
+touch {object};                      // updates the objects upd_time so it wont be deleted.. all GET objects are touched so this probably redundant.
+code {thing} cut|copy|paste {code} // manipulate the code of an object
+add {value} to {$variable}
+take {value} from {$variables}
+swap {$variable} so {thing} is {thing} // swaps one string with another in the named variable swap $newname so "black" is "white"  - swap #newclass so $target's class is $new_colour; # list is returned to $current_loc 
+colour {thing}                       // 
+dedupe {thing}                       // removes duplicate instances of the specified object
+list {criteria}                      // lists all objects (no in void) based on criteria - default is all new objects.
+nudge {thing},up|down|left|right|norht|east|south|west  // change an objects x,y,z
+clear {thing},xyz|all  // clear objects x,y,z and or pose,host and hosthow - 
+today n month|day|hour|minute|second format {formatstring} // make a string for a date based on todays date+- n formatted using MySQL format string.
+load {thing}              // loads the contents fo the thing into a list so you can use $list_count, $list[0],$list[1] up to $list[$list_count]
+
+<b>Definitions:</b>
+{thing} = {obj_field | $var | "string"}
+{condition} =  {thing} {like | eq | ne | > | < | != } {thing}
+{obj_field} = {{resolves_to_obj_id}'s }field}  eg: $actor's host's link's host's qty
+{msg_text}  = "[$actor] did $action with params of $cmd_text" If you enclose a variable in [] then it will be translated into then name of the object represented by the value of the variable
+{trigger_cmd_name} =  a simple word used to find objects which react to the action performed eg get and eat should both used the trigger_word 'get'
+{user_cmd_string} = a command as if typed by a user eg 'call create a cat;' will cause the current actor to create a cat
+{code} = iether part of a codename to match OR a block of code to paste
+{where_clause} = a raw SQL where clause eg "class like '%fish%' or class like '%frog%' and colour = 'green'"
+{formatstring} =  a string of %x as per MySQl date_format() function.
+$var = a temp variable created for use only while this object is performing its commands. (there are some pre-defined variables $actor, $loc, $cmd_text, $init_obj, $init_cmd etc.. I will describe later).
+
+find method = 'random' = pick a random object in this location - optional limits are 'player|not player|doorway|not doorway|not me'. comnine as needed.
+look method = 'list|full|inv|examine|trade' 
+If var ends with [1] then only return the first word of string: $text = 'to the fish' $text[1] returns 'to'
+If the code of an command is 'same as {object}' the that named command will be used eg 'same as paint'
+
+new  sets vars:    $target,$new_loc
+find sets vars:    $found_id,$found_loc;
+foreach sets vars: $for_id,$for_link,$for_class,$for_name
+look sets vars:    $current_loc or $sys_msg with description of the obj $loc, method is 'inv','list','examine' or blank for default location description
+copy sets vars:    $new_id,$new_loc
+case $actor's weight do something,another,secondsub;  // starts at 0 
+
+<b>More detailed definitions</b>
+{thing}
+
+A thing in a command can be one of several things, it always resolves itself into a value but it can be derived from several srouces.
+A thing can be: 
+a constant number eg 123
+a constant string of text "old and crumbly"
+the ID number (obj_id) from the named object eg $actor,$loc,$target etc..
+a field value from a named object eg $actor's host -or- $target's link&nbsp;etc..
+This concept needs a little more explanation:
+ In an effort to make the syntax very english-like I have opted for the delimiter of "'s " to seperate the objects unique ID and its field name.
+ See 'The anatomy of an object' to see what fields an object has.
+ Logically you can continue chaining values until you reach your desired value eg $actor's host's loc's link's loc's class
+ (does not appear to be working beyond 2 levels - code still in progress)
+
+<b>The full list of commands</b>
+
+<b>IF</b>
+If the contition is true the continue from the first named sub else continue from the last named sub 
+
+Syntax: if {thing} {like | eq | ne | > | < | != } {thing} then {true_sub_name} else {false_sub_name};
+
+Example: if $actor's host > 0 then onsomething else freestanding;
+In this example we check to see if the $actor's host value is > 0.  If it is then continue with the code  block named 'onsomething' otherwise continue with a sub called 'freestanding' 
+
+See the description of a 'thing' for more information.
+
+<b>GET</b>
+Work out which object's ID or string of text the player is refering to and sets the associated variables. If the player typed 'open the red door', then the OPEN command will try and find 'the red door'
+
+Syntax: get {things} [in {locs}
+
+get {things} can be:
+get $target               Just try and resolve the target object and nothing else
+get $target,to,$text      Resolve the target object and all text following the word 'to' eg. rename the cat to Frank
+get $target,'to',$text    same as above
+get $pretext,$target
+get $target,$ret,$second
+
+The {locs} is iether one object the target and second must be found in
+or two objects seperated by a comma where the target then the second must be found in if they are to be different
+
+This concept allows us to specify that you can only give something in your carry to an object in the same location as you eg.
+get $target,$rel,$second in $actor,$loc;
+This says: find a target in the current actor and a second in the current location
+
+There are a set range of things you can get
+
+get {$target | $target,to,$text | $text,'to',$target | $target,$ret,$second | $pretext,$target} in {$object1,$object2};
+
+$lastword is automatically set as the last word in the string (specifcally for printing things: paint the cat orange)
+
+<b>CODE</b>
+Manipulate the code of an object.  You can cut, copy and paste sections of code.
+
+Syntax: code {thing} cut|copy|paste|switch on/off {code_name|"string"|$variable};
+
+Returns:
+$orig_code is set to the code of the named object prior to the action
+$copy_code is a subset of all code blocks matching the name specified (result of cut and copy)
+$new_code is the entire code pasted back into the object (result of cut and paste)
+
+Example: if you want to get all of the code blocks matching 'newobj' from the target object do this:
+code $target's code copy 'newobj';
+
+This will find ##newobj:  and ##newobj1: and ##newobjcontinue: etc.. and put it in $copy_code for later use.
+
+To paste this code into the second object:
+code $second's code paste $new_code;
+
+To remove all instances of code refering to 'move' from the actor:
+code $actor's code cut "move";
+
+To append all of the code from the target into the second do this:
+code $target's code copy "junk";
+code $second's code paste $new_code;
+
+To completely duplicate the code from the target to the second use the SET commend:
+set $second's code to $target's code;
+
+Note: paste just adds the code to the bottom of the obejcts current code and duplications of code blocks may result in unpredictability
+
+To turn an objects tick or tickloc on or off use code like this:
+code $target switch on
+code $actor's host switch off
+
+This turns all instances of tick into txick and visa-versa.
+
+<b>FIND</b>
+Finds an object in the selected location, iether explicitly by name or randomly
+
+find $loc,cat;            // this finds a cat in the current location
+find $loc,random {options};         // this finds a random object in the current location taking into accound options see below..
+find $loc,dusty path;     // finds an object called 'dusty path' in current location..
+
+options for find random:
+doorway
+not doorway
+player
+not player
+not me
+you can combine these in any combination eg:
+
+find $loc,random not doorway not me not player; 
+find $loc,random player;
+find $loc,random not me;
+find $loc,random doorway;
+
+NOTES on the written content of an object:
+use 'file&nbsp;something.txt' to have a file&nbsp;included (must live in the www.wolispace.com/cow folder).
+use 'img&nbsp;http://www.somewhere.com/images/filename.jpg' to include an image
+use 'link&nbsp;http://somewhere.com' to include a web link..
+
+<b>VAR</b>
+Sets a variable for later use in this instance of cowscript.
+var $something to 'this string';
+var $counter to 5;
+var $myhost to $actor's host;
+var $random_num to random 10;
+var $tim to today 7 hour format %H:%i on %a;
+
+random n returns a random number from 0 to the number specified.
+
+<b>MSG</b>
+description
+
+Syntax:
+
+<b>SAY</b>
+description
+
+Syntax:
+
+<b>SET</b>
+description
+
+Syntax:
+
+<b>NEW</b>
+description
+
+Syntax:
+
+<b>FOREACH</b>
+description
+
+Syntax:
+
+<b>LOOK</b>
+description
+
+Syntax:
+
+<b>RUNSUB</b>
+description
+
+Syntax:
+
+<b>CASE</b>
+description
+
+Syntax:
+
+<b>MODE</b>
+description
+
+Syntax:
+
+<b>CALL</b>
+description
+
+Syntax:
+
+<b>COPY</b>
+description
+
+Syntax:
+
+<b>TOUCH</b>
+description
+
+Syntax:
+
+<b>CODE</b>
+description
+
+Syntax:
+
+<b>ADD</b>
+description
+
+Syntax:
+
+<b>TAKE</b>
+description
+
+Syntax:
+
+<b>SWAP</b>
+description
+
+Syntax:
+
+<b>COLOUR</b>
+description
+
+Syntax:
+
+<b>DEDUPE</b>
+description
+
+Syntax:
+
+<b>LIST</b>
+description
+
+Syntax:
+
+<b>NUDGE</b>
+description
+
+Syntax:
+
+<b>CLEAR</b>
+description
+
+Syntax:
+
+<b>TODAY</b>
+description
+
+Syntax:
+
+<b>LOAD</b>
+description
+
+Syntax:
+$randomitem is a random item from the list
+

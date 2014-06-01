@@ -1,0 +1,23 @@
+<script>
+ function boo(e){
+  alert(e);
+ }
+</script>
+<input type='submit' id='timerButton' value='start' onClick='timerToggle(1000)' ><input type='text' size=2 id='timerHours' title='Decimal hours'>hrs (<span id='timerMins'></span> mins) <span id='timerSecs' style='display:none'></span> <span id='timerAnim'></span>
+<input type='hidden' id='timerAnim1' value=':'> 
+<input type='hidden' id='timerAnim2' value='.'> 
+<input type='hidden' id='timerButton1' value='start'> 
+<input type='hidden' id='timerButton2' value='stop'> 
+
+<script>
+ function boo(e){
+  alert(e);
+ }
+</script>
+<a href=# onClick="boo('something')" class=cmd>boo</a>
+
+Use this to time how long something takes.  
+
+Type n a starting time like 1.5 hours and it will continue from there.
+
+However it does not save or remember the time so move away from it and you loose your timer.  Im thinking of making it remember.. but I have not spent any time on this.

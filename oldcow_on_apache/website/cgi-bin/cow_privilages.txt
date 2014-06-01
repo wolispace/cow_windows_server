@@ -1,0 +1,7 @@
+GRANT LOCK TABLES ON *.* TO boris@localhost;
+GRANT LOCK TABLES ON *.* TO boris@'';
+FLUSH PRIVILEGES;
+
+root66
+SELECT password('getyourkicks') = 76d521ea250cd051
+

@@ -1,0 +1,54 @@
+obj_id    = number  The unique ID for this object
+class     = text    Describes the object eg. cat 
+name      = text    The exact name of the object eg <em>Frank</em> for a cat named Frank
+loc       = number  The obj_id of where this object is located
+owner     = number  The obj_id of the object, usually a player, which created this object
+link      = number  The obj_id this object is linked to as a doorway/portal
+linkhow   = number  -forgot- 
+host      = number  The obj_id of the object this object is put against eg a cat on a chair
+hosthow   = text    Describes how this object is put against another eg <em>under</em> <em>on</em> etc..
+qty       = number  How many of this object
+qty_type  = text    -forgot-
+attribs   = text    -not in use-
+full_name = text    -not in use-
+code      = text    All of the code this object can perform
+material  = text    -not in use-
+weight    = number  -not in use-
+strength  = number  -not in use-
+pwd       = text    The password for this object - if yours matches then you can manipulate it
+email     = text    The email of the player who <em>is</em> this object - so we dont maintain a table of users
+linkstate = number  Is the doorway 0 = closed, 1 = open
+info      = text    Anything written in an object, like a book, is stored in here
+extra     = text    Extra text displayed at the end of a object <em>which is blinking</em> could be the extra text for a light bulb
+pose      = text    text describle how the object is posed eg <em>sleeping</em> could be used for a cat: <em>a cat sleeping on the chair</em>
+face      = text    A cardinal point allowing players to move using them eg. <em>north</em>
+facehow   = text    How the object faces the cardinal point eg <em>facing</em> or <em>leading</em> : <em>leading north</em>
+x,y,x     = number  position in current room
+slot1,2,3 = string  (redundant) fields used for anything, generally used to store counters so a coded object can remember what it last did.
+colour    = string  holding the CSS colour name of a painted object.
+globalx,y,z= number position on the map relative to linked object
+globalimg = string   Image to show on radar instead of obj name.
+mask      = text    The words the player does not want to read
+imglook,map,loc,list = text URLs to images to use for look, map, and list views
+creator  = number   Who created this object in the first place - as compared with who owns it right now.  
+niceness = number   How nice this person is
+switch   = number   1=on (default the obj wil react to anything its coded to, 0=off, only some cmds wake it
+keyid    = number   The ID of the object that has locked this objects
+keyloc   = number   The ID of the object this locked object would link to if unlocked
+health   = number
+armour   = number
+mana     = number
+wisdom   = number  
+hunger   = number  
+mood     = number  (can be negative or positive) starts at 0
+clock    = number  
+counter  = number  A counter specific for this object.. if you need more counters just use pocket variables
+
+
+
+
+
+
+
+
+

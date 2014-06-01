@@ -1,0 +1,388 @@
+<html><head>
+<title>cow_ajax</title>
+<script type="text/javascript" src="/cow/cow_drag.js"></script>
+
+<script type="text/javascript"><!--
+
+var t0 = setInterval("ajaxRead('\/cgi-bin\/$cow?p=$p&m=msgr&f=2')",3000); // wait a sec before initialising..
+var t1 = setTimeout("ajaxRead('\/cgi-bin\/$cow?p=$p&m=input&f=2&c=look')",300); // wait a sec before initialising..
+var t2 = setInterval("updisp()",200);
+var t3 = setTimeout("loadWindows()",250);
+
+var error_count =0;	// how many http errors sofar..
+var cmdbox_state=0; // init to hidden..
+var lcm_state   =0; // init to hidden..
+var ucmd_sent   =0; // has a user command been sent and we are awaiting a reply..
+var otitle      ='';// the last title..
+function ajaxRead(file,ucmd){
+  var xmlObj = null;
+  if(window.XMLHttpRequest){
+      xmlObj = new XMLHttpRequest();
+  } else if(window.ActiveXObject){
+      xmlObj = new ActiveXObject("Microsoft.XMLHTTP");
+  } else {
+      return;
+  }
+	var xmlo = ucmd;
+	if(ucmd==1){
+    if(error_count>0){
+  		window.document.title=' -- please be patient --';
+		}else{
+			otitle=window.document.title;
+			window.document.title='..thinking..';
+		}
+		ucmd_sent=1;
+	}
+  xmlObj.onreadystatechange = function(){
+		if(xmlObj.readyState == 4){
+			if (xmlObj.status == 200) {	 // only if "OK"
+				error_count=0;
+				if((xmlo==1)&&(ucmd_sent==1)){
+					ucmd_sent==0;
+					window.document.title=otitle;
+				}
+				var bits = xmlObj.responseText.split("~~~"); // split ~~~msgs~~fopp says hi~~~locs:You are in..
+        //document.getElementById('msgs').innerHTML+=xmlObj.responseText;
+        for (var i=0; i < bits.length; i++) {
+					var bit = bits[i].split("~~",2);
+					if(bit.length > 0){
+						if((bit[0].length>1)&&(bit[0].length<7)){
+							if(bit[0]=='msgs'){
+								var lines = bit[1].split("<br>") // split msg into its lines and add to msgs one by one..
+								for (var lc=0; lc < lines.length; lc++) {
+									if(lines[lc].length>0){
+									  var line = lines[lc].split('|',2); // split 123|wolis says hi
+									  addlist(line[0],line[1]);
+									}
+								}
+							}else if(bit[0]=='lcmds'){
+								var lines = bit[1].split("|") // split cmds into strings..
+								for (var lc=0; lc < lines.length; lc++) {
+									if(lines[lc].length>0){
+									  addlcmd(lines[lc],lines[lc]);
+									}
+								}
+
+							}else if(bit[0]=='nums'){
+		             if(ucmd_sent==0){
+		               window.document.title = bit[1];
+								 }
+							}else if(bit[0]=='id'){
+								 var flds = bit[1].split('='); // split ~~~id~~last_target=123
+		               //alert(bit[1]+'['+flds[0]+']['+flds[1]+']');
+		             if(flds[0]=='bannercolour'){
+									 //document.getElementById('info').style.background=flds[1];
+								 }else{
+									 if(document.getElementById(flds[0])){
+										 document.getElementById(flds[0]).value = flds[1];
+									 }else{
+										alert('cant find '+bit[1]+'['+flds[0]+']['+flds[1]+']');
+									 }
+								 }
+							}else	if(bit[0]=='nwin'){
+                 newwin = window.open(bit[1]);
+							}else if(bit[1].length>1){
+								 //document.getElementById('msgs').innerHTML += bit[0]+',';	// replace contents..
+								 document.getElementById(bit[0]).innerHTML = bit[1];	// replace contents..
+							}
+						}
+
+					}else{
+						document.getElementById('error').innerHTML = bit[0];	// write out the error msg..
+					}
+				}
+			}else{
+				error_count++;
+				if(error_count>10){
+				  window.document.title="There was a problem accessing cow: " + xmlObj.status;
+					error_count=0;
+				}else{
+					window.document.title="network delay "+error_count+" "+file;
+				}
+
+			}
+		}
+	}
+	xmlObj.open ('POST', file, true);
+	xmlObj.send ('');
+}
+function addlist(n,t) {
+  with(document.getElementById('mlist')){
+		var l=length++;
+		options[l].value=n;
+		options[l].text=t;
+	}
+}
+function addlcmd(n,t) {
+  with(document.getElementById('lcmd')){
+		if(length>16){
+			for(var i=0;i<length-1;i++){
+				var c = i+1;
+				options[i].value=options[c].value;
+				options[i].text=options[c].text;
+			}
+			options[i].value=n;
+			options[i].text=t;
+		}else{
+  		var l=length++;
+			options[l].value=n;
+			options[l].text=t;
+		}
+  }
+}
+
+function updateObj(obj, data){
+ document.getElementById(obj).firstChild.data = data;
+}
+
+var done=new Array();
+
+function loadWindows(){ // loads window positions from cookie..
+  var this_pos = cG('cow');
+  //alert(this_pos);
+  if(this_pos != undefined){
+    // split into bits and position window accoringly..
+	bits = this_pos.split('~'); // split into msgs^123^12^123^45~info^83^827..
+	//alert(bits);
+	for (var i=0; i < bits.length; i++){
+	  var bit = bits[i].split('^');
+	  if(bit[0] != ''){
+		  //alert(bit);
+		  var this_obj = document.getElementById(bit[0]);
+		  
+		  this_obj.style.left = parseInt(bit[1]);
+		  this_obj.style.top  = parseInt(bit[2]);
+		  this_obj.style.width = parseInt(bit[3]);
+		  this_obj.style.height = parseInt(bit[4]);
+		}
+	}
+  }
+}
+
+function saveWindows(){ // save current window poss into a cookie..
+  var ret = '';
+  var this_obj = document.getElementById('msgsHolder');
+  ret += 'msgsHolder^'+this_obj.style.left+'^'+this_obj.style.top+'^'+this_obj.style.width+'^'+this_obj.style.height+'~';
+  this_obj = document.getElementById('locsHolder');
+  ret += 'locsHolder^'+this_obj.style.left+'^'+this_obj.style.top+'^'+this_obj.style.width+'^'+this_obj.style.height+'~';
+  cS('cow',ret,999);
+  document.title = ret;
+}
+
+function updisp(){
+	//document.getElementById('msgsHolder').style.left = parseInt(document.getElementById('msgsHolder').style.left);
+	with(document.getElementById('mlist')){
+		var p = selectedIndex+1;
+		if(p<1){
+			selectedIndex=-1;
+			p=0;
+		}
+		if(p < length){
+			selectedIndex++;
+			if(done[options[p].value] > 0){
+			}else{
+				with(document.getElementById('msgs')){
+				  innerHTML += options[p].text+"<br>";
+				  scrollTop=scrollHeight;
+				}
+				done[options[p].value]=1;
+			}
+		}
+	}
+}
+
+
+function showcmdbox() { // moves the cmdbox into view..
+  with(document.getElementById('cmdbox')){
+		if (cmdbox_state==1){ // move back..
+	  	style.bottom=0;
+			style.right=-20;
+	  	style.height=15;
+			cmdbox_state=0;
+      document.getElementById('cmdbutton').innerHTML="-^-";
+    }else{					 // move out..
+	  	style.bottom=-10;
+	  	style.height=145;
+			style.right=0;
+			cmdbox_state=1;
+      document.getElementById('cmdbutton').innerHTML="-v-";
+		}
+	}
+}
+
+function showlcmbox() { // moves the lcmbox into view..
+  with(document.getElementById('lcm')){
+		if (lcm_state==1){ // move back..
+	  	style.bottom=0;
+			style.left=-80;
+	  	style.height=15;
+			lcm_state=0;
+      document.getElementById('lcmbutton').innerHTML="-^-";
+    }else{					 // move out..
+	  	style.bottom=0;
+			style.left=0;
+	  	style.height=235;
+			lcm_state=1;
+      document.getElementById('lcmbutton').innerHTML="hide last cmds";
+		}
+	}
+}
+
+function clickcmd(cmd){ // populates the users cmdbox with this cmd and submits it..
+	document.getElementById('c').value=cmd;
+	usercmd();
+}
+
+
+function usercmd(mm){
+	var url = '\/cgi-bin\/$cow?f=2';
+	with(document){
+		url+='&p='+getElementById('p').value;
+		url+='&m='+getElementById('m').value;
+		url+='&d='+getElementById('d').value;
+		url+='&c='+getElementById('c').value;
+		url+='&t='+getElementById('t').value;
+		url+='&y='+getElementById('y').value;
+		url+='&s='+getElementById('s').value;
+		if(getElementById('c').value!=''){
+  		getElementById('c').focus();
+		}else{
+  		getElementById('y').focus();
+		}
+		getElementById('c').value='';
+		getElementById('y').value='';
+	}
+  ajaxRead(url,1);
+  saveWindows(); // set a cookie with the window positions..
+  
+}
+
+
+if(window.Event){
+  document.captureEvents(Event.KEYDOWN); document.onkeydown = setkey;
+}else{
+  document.onkeydown = function(){
+   return setkey(event);
+  }
+}
+
+function setkey(event){
+	if((event.which==13)||(event.keyCode==13)){
+		usercmd();
+	}
+}
+
+function changeOpac(opacity, id) {  //change the opacity for different browsers
+  alert(id);
+  var object = document.getElementById(id).style;
+  object.opacity = (opacity / 100);
+  object.MozOpacity = (opacity / 100);
+  object.KhtmlOpacity = (opacity / 100);
+  object.filter = "alpha(opacity=" + opacity + ")";
+}
+
+//cookie managment..  Set(name,Value,expires),Get(name),Destroy(name)
+function cS(n,v,a){if(a){y=new Date();y.setTime(y.getTime()+(a*24*60*60*1000));x= '; expires='+y.toGMTString()}else{x=''}document.cookie=n+'='+v+x+'; path=/';}
+function cG(n){n=n+'=';v=document.cookie.split(n);if(v.length>1){y=v[1].split(';');return y[0]}else{return ''}};
+function cD(n){cS(n,'',-1)}
+
+//--></script>
+<style>
+#info{position:absolute;width:100%;height:30px;top:0px;margin:0px 0px 10px 0px;}
+#msgs{position:absolute;width:100%;height:100%;overflow-y:scroll;overflow:-moz-scrollbars-vertical;margin:0px 0px 2px 0px; background:#103050 url(/cow/grade.jpg);background-repeat:repeat-x;}
+#locs{position:absolute;width:100%;height:100%;overflow-y:scroll;overflow:-moz-scrollbars-vertical;margin:0px 0px 2px 0px; background:#103050 url(/cow/grade.jpg);background-repeat:repeat-x;}
+#uinput{width:100%;height:8%;left:0px;position:absolute;bottom:1px;padding:3px 0px 0px 0px; background-image:url(/cow/grade.jpg);background-repeat:repeat-x;}
+#mlist{width:200px;height:100px;border:1px solid black;}
+#error{width:100%;height:auto;}
+#rep{width:100%;height:auto;position:absolute;top:-5000;}
+#lcm{width:100px;height:15px;position:absolute;left:-80px;bottom:0px;text-align:right;background-image:url(/cow/grade.jpg);background-repeat:repeat-x;}
+#lcm{opacity:.9;MozOpacity:.9;KhtmlOpacity:.50;filter:alpha(opacity=50);overflow:hidden; }
+#lcmd{width:100%;height:95%;background-image:url(/cow/grade.jpg);background-repeat:repeat-x;}
+#banner{width:100%;height:30px;}
+#users{position:absolute;top:10px;left:5px;}
+.form{margin:0px;border:0px;}
+#cmt{position:absolute;top:5px;right:10px;}
+#ver{position:absolute;top:5px;right:90px;}
+#cmdbox{position:absolute;bottom:0px;right:-20px;width:40px;height:15px;background-image:url(/cow/grade.jpg);background-repeat:repeat-x;}
+#cmdbox{opacity:.9;MozOpacity:.9;KhtmlOpacity:.50;filter:alpha(opacity=50);overflow:hidden; }
+#cmdlist{margin:5px;opacity:.99;}
+#nudge{position:relative;left:25px;}
+body{overflow:hidden;}
+#msgsR{position:absolute;bottom:0px;right:0px;}
+#msgsHolder{bxorder:1px solid black;}
+#msgs{height:200px;}
+#locsR{position:absolute;bottom:0px;right:0px;}
+#locsHolder{bxorder:1px solid black;}
+#locs{height:200px;}
+</style>
+<link rel='stylesheet' type='text/css' href='/cow/cow.css'>
+</head>
+<body bgcolor=103050>
+ <!--
+ <a href=# onClick="ajaxRead('\/cgi-bin\/$cow?p=oNqga&m=input&c=think')">Think</a>
+ <a href=# onClick="ajaxRead('\/cgi-bin\/$cow?p=oNqga&m=msgr&f=2')">msgr</a>
+ <a href=# onClick="addMsg('this is a test')">add</a>
+ -->
+ <div id="infoHolder">
+	 <div id="info" class="bgr">
+	 	 <div id="banner"></div>
+		 <span id="ver" class="nml"></span>
+		 <span id="cmt"></span>
+		 <div id="users"></div>
+	 </div>
+ </div> 
+ <!-- div id="msgsHolder" style="position:absolute;left:50%;top:50px;height:80%;width:50%;"  -->
+ <div id="msgsHolder" style="position:absolute;left:0px;top:50px;height:180px;width:790px;">
+  <div id="msgs" onmousedown="dragStart(event,'msgsHolder')" style="top:-15px;height:100%;width:100%"></div>
+  <div id="msgsR" onmousedown="dragStart(event,'msgsR','msgsHolder')">//</div>
+ </div> 
+ <!-- div id="locsHolder" style="position:absolute;left:0px;top:50px;height:80%;width:50%;" -->
+ <div id="locsHolder" style="position:absolute;left:0px;top:250px;height:180px;width:790px;">
+ <div id="locs"  onmousedown="dragStart(event,'locsHolder')" style="top:-15px;height:100%;width:100%">almost ready..</div>
+  <div id="locsR" onmousedown="dragStart(event,'locsR','locsHolder')">//</div>
+ </div> 
+ <div id="uinput">
+
+	<form method=POST name=input_form class="form" id=input_form onSubmit="usercmd('input'); return false;">
+		<table width='100%' cellpadding='0' cellspacing='0' border=0><tr>
+		 <td width=40% valign=top><span class=sml>&nbsp;Cmd:</span><input type=text name=c id=c size=40 class=inp style='WIDTH:85%' title='Type a command then press [Enter]. Or click on the quick commands below'></td>
+		 <td width=40% valign=top><span class=sml>&nbsp;Say:</span><input type=text name=say id=y size=40 class=inp style='WIDTH:85%' title='Type something you want to say then press [Enter].'></td><td width=5%>
+		 <td width=10% valign=top><input type=button value=ok class=btn name=ok onClick="usercmd('input')" style='WIDTH:70%' title='Click this to perform your typed command or to say something'>
+		 <!--
+		 &nbsp;<a href='$cow?f=1&c=look&l=7265&k=look. map' target=_blank class=sml title='copy this URL to email your last command to a friend'>!</a>
+		 -->
+		</td></tr></table>
+		<input type=hidden name=p id=p value=$p>
+		<input type=hidden name=m id=m value=input>
+		<input type=hidden name=a id=a value=87>
+		<input type=hidden name=t id=t value=>
+		<input type=hidden name=f id=f value=2>
+		<input type=hidden name=d id=d value=>
+		<input type=hidden name=s id=s value=$s>
+	</td></tr></table></form>
+   <div id="nudge"></div>
+ </div>
+ <div id="error"></div>
+ <div id="rep">
+  <select name="mlist" id="mlist" multiple></select>
+ </div>
+ <div id="lcm"><a href=# id="lcmbutton" onMouseover="showlcmbox()" class="cmd">-^-</a>
+  <select name="lcmd" id="lcmd" class="sml_list" onClick="document.getElementById('c').value=document.getElementById('lcmd').value;" OnDblClick="document.getElementById('c').value=document.getElementById('lcmd').value;showlcmbox();usercmd('input');" multiple title='click to retype a previous command, DoubelClick to run it'></select>
+ </div>
+ <div id="cmdbox"><a href=# id="cmdbutton" onMouseover="showcmdbox()" class="cmd">-^-</a>
+	<div id="cmdlist">
+   <a href=# onClick="clickcmd('look')" class=cmd>look</a>
+	 <br><a href=# onClick="clickcmd('list')" class=cmd>list</a>
+	 <br><a href=# onClick="clickcmd('inv')" class=cmd>inv</a>
+	 <br><a href=# onClick="clickcmd('map')" class=cmd>map</a>
+	 <br><a href=# onClick="clickcmd('exit')" class=cmd>exit</a>
+	 <br><a href=# onClick="clickcmd('shout')" class=cmd>shout</a>
+	 <br><a href=# onClick="clickcmd('start')" class=cmd>start</a>
+	 <br><a href=# onClick="clickcmd('logoff')" class=cmd>logoff</a>
+	 <br><a href=# onClick="cD('cow');alert('Refresh this window NOW. The display will be reset when you log in again')" class=cmd>reset</a>
+ 	</div>
+ </div>
+
+
+</body>
+</html>
